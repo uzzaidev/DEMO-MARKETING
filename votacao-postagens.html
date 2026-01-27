@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Votação - UzzAI Marketing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .user-selection {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .user-selection h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .user-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .user-input input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .user-input button {
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .user-input button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .current-user {
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .current-user strong {
+            color: #667eea;
+        }
+
+        .carousel-container {
+            padding: 40px;
+        }
+
+        .carousel-selector {
+            margin-bottom: 30px;
+        }
+
+        .carousel-selector h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .carousel-tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .carousel-tab {
+            padding: 12px 24px;
+            background: #e9ecef;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .carousel-tab:hover {
+            background: #dee2e6;
+        }
+
+        .carousel-tab.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .slide-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .slide-btn {
+            padding: 10px 20px;
+            background: #e9ecef;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            min-width: 100px;
+        }
+
+        .slide-btn:hover {
+            background: #dee2e6;
+        }
+
+        .slide-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .slide-btn.has-votes {
+            background: #28a745;
+            color: white;
+        }
+
+        .carousel-section {
+            display: none;
+        }
+
+        .carousel-section.active {
+            display: block;
+        }
+
+        .slide {
+            display: none;
+        }
+
+        .slide.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide h2 {
+            margin-bottom: 30px;
+            color: #333;
+            text-align: center;
+            font-size: 2em;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .option-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s;
+            border: 3px solid transparent;
+        }
+
+        .option-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .option-card.voted {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .option-card h3 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 1.1em;
+            min-height: 40px;
+        }
+
+        .image-container {
+            width: 100%;
+            height: 350px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            cursor: pointer;
+        }
+
+        .image-placeholder {
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .rating {
+            margin: 15px 0;
+        }
+
+        .rating label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .stars {
+            display: flex;
+            gap: 5px;
+            font-size: 2em;
+            justify-content: center;
+        }
+
+        .star {
+            cursor: pointer;
+            color: #ddd;
+            transition: all 0.2s;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #ffd700;
+            transform: scale(1.1);
+        }
+
+        .comment-box {
+            margin: 15px 0;
+        }
+
+        .comment-box label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .comment-box textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 0.9em;
+        }
+
+        .vote-btn {
+            width: 100%;
+            padding: 12px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .vote-btn:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .vote-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .nav-btn {
+            padding: 12px 30px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results-section {
+            padding: 30px;
+            background: #f8f9fa;
+            border-top: 2px solid #e9ecef;
+        }
+
+        .export-btn {
+            width: 100%;
+            padding: 15px;
+            background: #17a2b8;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .export-btn:hover {
+            background: #138496;
+            transform: translateY(-2px);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .stat-card h3 {
+            font-size: 2em;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-card p {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border-left: 4px solid #ffc107;
+        }
+
+        .image-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .image-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🗳️ Sistema de Votação - UzzAI Marketing</h1>
+            <p>Vote nas melhores postagens para Instagram</p>
+        </div>
+
+        <div class="user-selection" id="userSelection">
+            <h2>Identificação do Sócio</h2>
+            <div class="alert alert-warning">
+                ⚠️ Por favor, identifique-se antes de votar
+            </div>
+            <div class="user-input">
+                <input type="text" id="userName" placeholder="Digite seu nome completo">
+                <button onclick="setUser()">Confirmar</button>
+            </div>
+        </div>
+
+        <div class="carousel-container" id="carouselContainer" style="display: none;">
+            <div class="current-user" id="currentUserDisplay"></div>
+
+            <div class="carousel-selector">
+                <h3>📂 Selecione o Carrossel:</h3>
+                <div class="carousel-tabs" id="carouselTabs"></div>
+            </div>
+
+            <div id="carouselsContainer"></div>
+        </div>
+
+        <div class="results-section">
+            <h2>📊 Estatísticas da Votação</h2>
+            <div class="stats" id="statsContainer"></div>
+            <button class="export-btn" onclick="exportResults()">📥 Exportar Resultados (JSON)</button>
+        </div>
+    </div>
+
+    <div class="image-modal" id="imageModal">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <script>
+        // Configuração dos carrosséis
+        const carousels = {
+            "Carrossel 1: Quem Somos UzzAI": {
+                slides: [
+                    {
+                        name: "Slide 1",
+                        options: [
+                            { title: "Opção 1", image: "01 - CARROSEL QUEM SOMOS/Gemini_Generated_Image_uywalhuywalhuywa.png" },
+                            { title: "Opção 2", image: "01 - CARROSEL QUEM SOMOS/Gemini_Generated_Image_jl0g9hjl0g9hjl0g.png" },
+                            { title: "Opção 3", image: "01 - CARROSEL QUEM SOMOS/Gemini_Generated_Image_7a4w7c7a4w7c7a4w.png" },
+                        ]
+                    },
+                    {
+                        name: "Slide 2",
+                        options: [
+                            { title: "Opção 1", image: "01 - CARROSEL QUEM SOMOS/Gemini_Generated_Image_21cw2c21cw2c21cw.png" },
+                            { title: "Opção 2", image: "01 - CARROSEL QUEM SOMOS/Gemini_Generated_Image_2ifbap2ifbap2ifb.png" },
+                            { title: "Opção 3", image: "01 - CARROSEL QUEM SOMOS/Gemini_Generated_Image_vk4vxwvk4vxwvk4v.png" },
+                        ]
+                    },
+                    {
+                        name: "Slide 3",
+                        options: [
+                            { title: "Opção 1", image: "01 - CARROSEL QUEM SOMOS/Gemini_Generated_Image_g0m5zsg0m5zsg0m5.png" },
+                            { title: "Opção 2", image: "01 - CARROSEL QUEM SOMOS/Gemini_Generated_Image_njs70tnjs70tnjs7.png" },
+                            { title: "Opção 3", image: "01 - CARROSEL QUEM SOMOS/Gemini_Generated_Image_jl0g9hjl0g9hjl0g (1).png" },
+                        ]
+                    },
+                    {
+                        name: "Slide 4",
+                        options: [
+                            { title: "Opção 1", image: "01 - CARROSEL QUEM SOMOS/Gemini_Generated_Image_2ifbap2ifbap2ifb (1).png" },
+                            { title: "Opção 2", image: "01 - CARROSEL QUEM SOMOS/Gemini_Generated_Image_4oltpc4oltpc4olt.png" },
+                            { title: "Opção 3", image: "01 - CARROSEL QUEM SOMOS/Gemini_Generated_Image_ohj29mohj29mohj2.png" },
+                        ]
+                    },
+                    {
+                        name: "Slide 5",
+                        options: [
+                            { title: "Opção 1", image: "01 - CARROSEL QUEM SOMOS/Gemini_Generated_Image_maqnbxmaqnbxmaqn.png" },
+                            { title: "Opção 2", image: "01 - CARROSEL QUEM SOMOS/Gemini_Generated_Image_6qorla6qorla6qor.png" },
+                            { title: "Opção 3", image: "01 - CARROSEL QUEM SOMOS/Gemini_Generated_Image_nkbzhxnkbzhxnkbz.png" },
+                        ]
+                    },
+                    {
+                        name: "Slide 6",
+                        options: [
+                            { title: "Opção 1", image: "01 - CARROSEL QUEM SOMOS/Gemini_Generated_Image_vt2wirvt2wirvt2w.png" },
+                            { title: "Opção 2", image: "01 - CARROSEL QUEM SOMOS/Gemini_Generated_Image_g0m5zsg0m5zsg0m5 (1).png" },
+                        ]
+                    }
+                ]
+            },
+            "Carrossel 2: O que é UzzApp": {
+                slides: [
+                    {
+                        name: "Slide 1",
+                        options: [
+                            { title: "Opção 1", image: "02 - Carrosel o que é o uzzapp/1.png" },
+                            { title: "Opção 2", image: "02 - Carrosel o que é o uzzapp/1 (2).png" },
+                        ]
+                    },
+                    {
+                        name: "Slide 2",
+                        options: [
+                            { title: "Opção 1", image: "02 - Carrosel o que é o uzzapp/2.png" },
+                            { title: "Opção 2", image: "02 - Carrosel o que é o uzzapp/2 (2).png" },
+                            { title: "Opção 3", image: "02 - Carrosel o que é o uzzapp/2 (3).png" },
+                        ]
+                    },
+                    {
+                        name: "Slide 3",
+                        options: [
+                            { title: "Opção 1", image: "02 - Carrosel o que é o uzzapp/3.png" },
+                            { title: "Opção 2", image: "02 - Carrosel o que é o uzzapp/3 (2).png" },
+                        ]
+                    },
+                    {
+                        name: "Slide 4",
+                        options: [
+                            { title: "Opção 1", image: "02 - Carrosel o que é o uzzapp/4.png" },
+                        ]
+                    },
+                    {
+                        name: "Slide 5",
+                        options: [
+                            { title: "Opção 1", image: "02 - Carrosel o que é o uzzapp/5.png" },
+                            { title: "Opção 2", image: "02 - Carrosel o que é o uzzapp/5 (2).png" },
+                            { title: "Opção 3", image: "02 - Carrosel o que é o uzzapp/5 (3).png" },
+                        ]
+                    },
+                    {
+                        name: "Slide 6",
+                        options: [
+                            { title: "Opção 1", image: "02 - Carrosel o que é o uzzapp/6.png" },
+                            { title: "Opção 2", image: "02 - Carrosel o que é o uzzapp/6 (2).png" },
+                            { title: "Opção 3", image: "02 - Carrosel o que é o uzzapp/6 (3).png" },
+                        ]
+                    }
+                ]
+            },
+            "Carrossel 3: Como Usar IA na Sua Empresa": {
+                slides: [
+                    {
+                        name: "Slide 1",
+                        options: [
+                            { title: "Opção 1", image: "03 -  CARROSSEL 05 COMO USAR IA NA SUA EMPRESA/1 (1).png" },
+                            { title: "Opção 2", image: "03 -  CARROSSEL 05 COMO USAR IA NA SUA EMPRESA/1 (2).png" },
+                            { title: "Opção 3", image: "03 -  CARROSSEL 05 COMO USAR IA NA SUA EMPRESA/1 (3).png" },
+                        ]
+                    },
+                    {
+                        name: "Slide 2",
+                        options: [
+                            { title: "Opção 1", image: "03 -  CARROSSEL 05 COMO USAR IA NA SUA EMPRESA/2 (1).png" },
+                            { title: "Opção 2", image: "03 -  CARROSSEL 05 COMO USAR IA NA SUA EMPRESA/2 (2).png" },
+                            { title: "Opção 3", image: "03 -  CARROSSEL 05 COMO USAR IA NA SUA EMPRESA/2 (3).png" },
+                        ]
+                    },
+                    {
+                        name: "Slide 3",
+                        options: [
+                            { title: "Opção 1", image: "03 -  CARROSSEL 05 COMO USAR IA NA SUA EMPRESA/3 (1).png" },
+                            { title: "Opção 2", image: "03 -  CARROSSEL 05 COMO USAR IA NA SUA EMPRESA/3 (2).png" },
+                        ]
+                    },
+                    {
+                        name: "Slide 4",
+                        options: [
+                            { title: "Opção 1", image: "03 -  CARROSSEL 05 COMO USAR IA NA SUA EMPRESA/4 (1).png" },
+                            { title: "Opção 2", image: "03 -  CARROSSEL 05 COMO USAR IA NA SUA EMPRESA/4 (2).png" },
+                        ]
+                    },
+                    {
+                        name: "Slide 5",
+                        options: [
+                            { title: "Opção 1", image: "03 -  CARROSSEL 05 COMO USAR IA NA SUA EMPRESA/5 (1).png" },
+                            { title: "Opção 2", image: "03 -  CARROSSEL 05 COMO USAR IA NA SUA EMPRESA/5 (2).png" },
+                            { title: "Opção 3", image: "03 -  CARROSSEL 05 COMO USAR IA NA SUA EMPRESA/5 (3).png" },
+                        ]
+                    },
+                    {
+                        name: "Slide 6",
+                        options: [
+                            { title: "Opção 1", image: "03 -  CARROSSEL 05 COMO USAR IA NA SUA EMPRESA/6 (1).png" },
+                            { title: "Opção 2", image: "03 -  CARROSSEL 05 COMO USAR IA NA SUA EMPRESA/6 (2).png" },
+                        ]
+                    },
+                    {
+                        name: "Slide 7",
+                        options: [
+                            { title: "Opção 1", image: "03 -  CARROSSEL 05 COMO USAR IA NA SUA EMPRESA/7 (1).png" },
+                            { title: "Opção 2", image: "03 -  CARROSSEL 05 COMO USAR IA NA SUA EMPRESA/7 (2).png" },
+                            { title: "Opção 3", image: "03 -  CARROSSEL 05 COMO USAR IA NA SUA EMPRESA/7 (3).png" },
+                        ]
+                    }
+                ]
+            },
+            "Carrossel 4: Como Usar IA (Versão 2)": {
+                slides: [
+                    {
+                        name: "Slide 1",
+                        options: [
+                            { title: "Opção 1", image: "04 - COMO USAR IA NA SUA EMPRESA/1 (1).png" },
+                            { title: "Opção 2", image: "04 - COMO USAR IA NA SUA EMPRESA/1 (2).png" },
+                            { title: "Opção 3", image: "04 - COMO USAR IA NA SUA EMPRESA/1 (3).png" },
+                        ]
+                    },
+                    {
+                        name: "Slide 2",
+                        options: [
+                            { title: "Opção 1", image: "04 - COMO USAR IA NA SUA EMPRESA/2 (1).png" },
+                            { title: "Opção 2", image: "04 - COMO USAR IA NA SUA EMPRESA/2 (2).png" },
+                            { title: "Opção 3", image: "04 - COMO USAR IA NA SUA EMPRESA/2 (3).png" },
+                            { title: "Opção 4", image: "04 - COMO USAR IA NA SUA EMPRESA/2 (4).png" },
+                        ]
+                    },
+                    {
+                        name: "Slide 3",
+                        options: [
+                            { title: "Opção 1", image: "04 - COMO USAR IA NA SUA EMPRESA/3 (1).png" },
+                            { title: "Opção 2", image: "04 - COMO USAR IA NA SUA EMPRESA/3 (2).png" },
+                            { title: "Opção 3", image: "04 - COMO USAR IA NA SUA EMPRESA/3 (3).png" },
+                        ]
+                    },
+                    {
+                        name: "Slide 4",
+                        options: [
+                            { title: "Opção 1", image: "04 - COMO USAR IA NA SUA EMPRESA/4 (1).png" },
+                            { title: "Opção 2", image: "04 - COMO USAR IA NA SUA EMPRESA/4 (2).png" },
+                            { title: "Opção 3", image: "04 - COMO USAR IA NA SUA EMPRESA/4 (3).png" },
+                            { title: "Opção 4", image: "04 - COMO USAR IA NA SUA EMPRESA/4 (4).png" },
+                        ]
+                    },
+                    {
+                        name: "Slide 5",
+                        options: [
+                            { title: "Opção 1", image: "04 - COMO USAR IA NA SUA EMPRESA/5 (1).png" },
+                            { title: "Opção 2", image: "04 - COMO USAR IA NA SUA EMPRESA/5 (2).png" },
+                            { title: "Opção 3", image: "04 - COMO USAR IA NA SUA EMPRESA/5 (3).png" },
+                        ]
+                    },
+                    {
+                        name: "Slide 6",
+                        options: [
+                            { title: "Opção 1", image: "04 - COMO USAR IA NA SUA EMPRESA/6 (1).png" },
+                            { title: "Opção 2", image: "04 - COMO USAR IA NA SUA EMPRESA/6 (2).png" },
+                            { title: "Opção 3", image: "04 - COMO USAR IA NA SUA EMPRESA/6 (3).png" },
+                            { title: "Opção 4", image: "04 - COMO USAR IA NA SUA EMPRESA/6 (4).png" },
+                        ]
+                    }
+                ]
+            }
+        };
+
+        let currentUser = localStorage.getItem('currentUser') || '';
+        let currentCarousel = 0;
+        let currentSlide = 0;
+        let votes = JSON.parse(localStorage.getItem('votes') || '{}');
+
+        function setUser() {
+            const userName = document.getElementById('userName').value.trim();
+            if (!userName) {
+                alert('Por favor, digite seu nome!');
+                return;
+            }
+
+            currentUser = userName;
+            localStorage.setItem('currentUser', userName);
+
+            document.getElementById('userSelection').style.display = 'none';
+            document.getElementById('carouselContainer').style.display = 'block';
+            document.getElementById('currentUserDisplay').innerHTML = `
+                <strong>Votando como:</strong> ${userName}
+                <button onclick="changeUser()" style="float: right; padding: 8px 15px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">Trocar Usuário</button>
+            `;
+
+            initializeCarousels();
+        }
+
+        function changeUser() {
+            currentUser = '';
+            localStorage.removeItem('currentUser');
+            document.getElementById('userSelection').style.display = 'block';
+            document.getElementById('carouselContainer').style.display = 'none';
+            document.getElementById('userName').value = '';
+        }
+
+        function initializeCarousels() {
+            const carouselTabs = document.getElementById('carouselTabs');
+            const carouselsContainer = document.getElementById('carouselsContainer');
+
+            carouselTabs.innerHTML = '';
+            carouselsContainer.innerHTML = '';
+
+            const carouselNames = Object.keys(carousels);
+
+            carouselNames.forEach((carouselName, carouselIndex) => {
+                // Create carousel tab
+                const tab = document.createElement('button');
+                tab.className = 'carousel-tab';
+                tab.textContent = carouselName;
+                tab.onclick = () => switchCarousel(carouselIndex);
+                carouselTabs.appendChild(tab);
+
+                // Create carousel section
+                const section = document.createElement('div');
+                section.className = 'carousel-section';
+                section.id = `carousel-${carouselIndex}`;
+
+                const carousel = carousels[carouselName];
+
+                // Slide navigation
+                const slideNav = document.createElement('div');
+                slideNav.className = 'slide-navigation';
+                carousel.slides.forEach((slide, slideIndex) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'slide-btn';
+                    btn.textContent = slide.name;
+                    btn.onclick = () => goToSlide(carouselIndex, slideIndex);
+                    if (hasVotedInSlide(carouselIndex, slideIndex)) {
+                        btn.classList.add('has-votes');
+                    }
+                    slideNav.appendChild(btn);
+                });
+                section.appendChild(slideNav);
+
+                // Slides container
+                const slidesDiv = document.createElement('div');
+                carousel.slides.forEach((slide, slideIndex) => {
+                    const slideDiv = document.createElement('div');
+                    slideDiv.className = 'slide';
+                    slideDiv.innerHTML = `
+                        <h2>${slide.name}</h2>
+                        <div class="options-grid">
+                            ${slide.options.map((option, optionIndex) => `
+                                <div class="option-card" id="option-${carouselIndex}-${slideIndex}-${optionIndex}">
+                                    <h3>${option.title}</h3>
+                                    <div class="image-container">
+                                        <img src="${option.image}" alt="${option.title}"
+                                             onclick="openModal('${option.image}')"
+                                             onerror="this.parentElement.innerHTML='<div class=image-placeholder>Imagem não encontrada</div>'">
+                                    </div>
+                                    <div class="rating">
+                                        <label>⭐ Avaliação (opcional):</label>
+                                        <div class="stars" data-carousel="${carouselIndex}" data-slide="${slideIndex}" data-option="${optionIndex}">
+                                            ${[1,2,3,4,5].map(star => `<span class="star" data-rating="${star}">★</span>`).join('')}
+                                        </div>
+                                    </div>
+                                    <div class="comment-box">
+                                        <label>💬 Comentário (opcional):</label>
+                                        <textarea id="comment-${carouselIndex}-${slideIndex}-${optionIndex}" rows="3" placeholder="Deixe seu feedback..."></textarea>
+                                    </div>
+                                    <button class="vote-btn" onclick="vote(${carouselIndex}, ${slideIndex}, ${optionIndex}, '${carouselName}', '${slide.name}', '${option.title}')">
+                                        ${getVoteButtonText(carouselIndex, slideIndex, optionIndex)}
+                                    </button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                    slidesDiv.appendChild(slideDiv);
+                });
+                section.appendChild(slidesDiv);
+
+                // Navigation buttons
+                const navDiv = document.createElement('div');
+                navDiv.className = 'navigation-buttons';
+                navDiv.innerHTML = `
+                    <button class="nav-btn" onclick="previousSlide(${carouselIndex})">⬅️ Anterior</button>
+                    <button class="nav-btn" onclick="nextSlide(${carouselIndex})">Próximo ➡️</button>
+                `;
+                section.appendChild(navDiv);
+
+                carouselsContainer.appendChild(section);
+            });
+
+            // Add star rating functionality
+            document.querySelectorAll('.stars').forEach(starsContainer => {
+                const stars = starsContainer.querySelectorAll('.star');
+                stars.forEach(star => {
+                    star.addEventListener('click', function() {
+                        const rating = this.dataset.rating;
+                        stars.forEach((s, i) => {
+                            s.classList.toggle('active', i < rating);
+                        });
+                    });
+                });
+            });
+
+            switchCarousel(0);
+            updateStats();
+        }
+
+        function switchCarousel(carouselIndex) {
+            const tabs = document.querySelectorAll('.carousel-tab');
+            const sections = document.querySelectorAll('.carousel-section');
+
+            tabs.forEach(t => t.classList.remove('active'));
+            sections.forEach(s => s.classList.remove('active'));
+
+            tabs[carouselIndex].classList.add('active');
+            sections[carouselIndex].classList.add('active');
+
+            currentCarousel = carouselIndex;
+            goToSlide(carouselIndex, 0);
+        }
+
+        function hasVotedInSlide(carouselIndex, slideIndex) {
+            const carouselName = Object.keys(carousels)[carouselIndex];
+            const slide = carousels[carouselName].slides[slideIndex];
+            return slide.options.some((_, optionIndex) => {
+                const key = `${currentUser}_${carouselIndex}_${slideIndex}_${optionIndex}`;
+                return votes[key];
+            });
+        }
+
+        function getVoteButtonText(carouselIndex, slideIndex, optionIndex) {
+            const key = `${currentUser}_${carouselIndex}_${slideIndex}_${optionIndex}`;
+            return votes[key] ? '✓ Votado' : '👍 Votar';
+        }
+
+        function vote(carouselIndex, slideIndex, optionIndex, carouselName, slideName, optionTitle) {
+            const key = `${currentUser}_${carouselIndex}_${slideIndex}_${optionIndex}`;
+
+            const starsContainer = document.querySelector(`.stars[data-carousel="${carouselIndex}"][data-slide="${slideIndex}"][data-option="${optionIndex}"]`);
+            const activeStars = starsContainer.querySelectorAll('.star.active');
+            const rating = activeStars.length || null;
+
+            const comment = document.getElementById(`comment-${carouselIndex}-${slideIndex}-${optionIndex}`).value.trim();
+
+            votes[key] = {
+                user: currentUser,
+                carousel: carouselName,
+                slide: slideName,
+                option: optionTitle,
+                rating: rating,
+                comment: comment,
+                timestamp: new Date().toISOString()
+            };
+
+            localStorage.setItem('votes', JSON.stringify(votes));
+
+            const card = document.getElementById(`option-${carouselIndex}-${slideIndex}-${optionIndex}`);
+            card.classList.add('voted');
+
+            const btn = card.querySelector('.vote-btn');
+            btn.textContent = '✓ Votado';
+
+            updateSlideNavigation(carouselIndex);
+            updateStats();
+
+            alert('✅ Voto registrado com sucesso!');
+        }
+
+        function updateSlideNavigation(carouselIndex) {
+            const section = document.getElementById(`carousel-${carouselIndex}`);
+            const buttons = section.querySelectorAll('.slide-btn');
+            buttons.forEach((btn, index) => {
+                btn.classList.remove('has-votes');
+                if (hasVotedInSlide(carouselIndex, index)) {
+                    btn.classList.add('has-votes');
+                }
+            });
+        }
+
+        function goToSlide(carouselIndex, slideIndex) {
+            const section = document.getElementById(`carousel-${carouselIndex}`);
+            const slides = section.querySelectorAll('.slide');
+            const buttons = section.querySelectorAll('.slide-btn');
+
+            slides.forEach(s => s.classList.remove('active'));
+            buttons.forEach(b => b.classList.remove('active'));
+
+            slides[slideIndex].classList.add('active');
+            buttons[slideIndex].classList.add('active');
+
+            currentSlide = slideIndex;
+        }
+
+        function previousSlide(carouselIndex) {
+            const carouselName = Object.keys(carousels)[carouselIndex];
+            const totalSlides = carousels[carouselName].slides.length;
+            const newSlide = currentSlide > 0 ? currentSlide - 1 : 0;
+            goToSlide(carouselIndex, newSlide);
+        }
+
+        function nextSlide(carouselIndex) {
+            const carouselName = Object.keys(carousels)[carouselIndex];
+            const totalSlides = carousels[carouselName].slides.length;
+            const newSlide = currentSlide < totalSlides - 1 ? currentSlide + 1 : currentSlide;
+            goToSlide(carouselIndex, newSlide);
+        }
+
+        function updateStats() {
+            const statsContainer = document.getElementById('statsContainer');
+
+            const totalVotes = Object.keys(votes).length;
+            const users = [...new Set(Object.values(votes).map(v => v.user))];
+            const ratingsWithValue = Object.values(votes).filter(v => v.rating);
+            const averageRating = ratingsWithValue.length > 0
+                ? (ratingsWithValue.reduce((acc, v) => acc + v.rating, 0) / ratingsWithValue.length).toFixed(1)
+                : '0';
+
+            const totalSlides = Object.values(carousels).reduce((acc, c) => acc + c.slides.length, 0);
+
+            statsContainer.innerHTML = `
+                <div class="stat-card">
+                    <h3>${totalVotes}</h3>
+                    <p>Total de Votos</p>
+                </div>
+                <div class="stat-card">
+                    <h3>${users.length}</h3>
+                    <p>Sócios Participantes</p>
+                </div>
+                <div class="stat-card">
+                    <h3>${averageRating}⭐</h3>
+                    <p>Média de Avaliação</p>
+                </div>
+                <div class="stat-card">
+                    <h3>${totalSlides}</h3>
+                    <p>Slides Disponíveis</p>
+                </div>
+            `;
+        }
+
+        function exportResults() {
+            const results = {
+                exportDate: new Date().toISOString(),
+                totalVotes: Object.keys(votes).length,
+                users: [...new Set(Object.values(votes).map(v => v.user))],
+                votes: votes,
+                summary: {}
+            };
+
+            // Group votes by carousel and slide
+            Object.values(votes).forEach(vote => {
+                if (!results.summary[vote.carousel]) {
+                    results.summary[vote.carousel] = {};
+                }
+                if (!results.summary[vote.carousel][vote.slide]) {
+                    results.summary[vote.carousel][vote.slide] = {};
+                }
+                if (!results.summary[vote.carousel][vote.slide][vote.option]) {
+                    results.summary[vote.carousel][vote.slide][vote.option] = {
+                        totalVotes: 0,
+                        ratings: [],
+                        comments: []
+                    };
+                }
+
+                results.summary[vote.carousel][vote.slide][vote.option].totalVotes++;
+                if (vote.rating) {
+                    results.summary[vote.carousel][vote.slide][vote.option].ratings.push(vote.rating);
+                }
+                if (vote.comment) {
+                    results.summary[vote.carousel][vote.slide][vote.option].comments.push({
+                        user: vote.user,
+                        comment: vote.comment
+                    });
+                }
+            });
+
+            // Calculate averages and find winners
+            Object.keys(results.summary).forEach(carousel => {
+                Object.keys(results.summary[carousel]).forEach(slide => {
+                    let maxScore = -1;
+                    let winner = null;
+
+                    Object.keys(results.summary[carousel][slide]).forEach(option => {
+                        const data = results.summary[carousel][slide][option];
+                        const ratings = data.ratings;
+                        data.averageRating = ratings.length > 0
+                            ? (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(2)
+                            : null;
+
+                        // Calculate score: votes * 10 + average rating
+                        const score = (data.totalVotes * 10) + (parseFloat(data.averageRating) || 0);
+                        data.score = score.toFixed(2);
+
+                        if (score > maxScore) {
+                            maxScore = score;
+                            winner = option;
+                        }
+                    });
+
+                    results.summary[carousel][slide].winner = winner;
+                });
+            });
+
+            const dataStr = JSON.stringify(results, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `votacao-uzzai-${currentUser}-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+
+            URL.revokeObjectURL(url);
+
+            alert('✅ Resultados exportados com sucesso!');
+        }
+
+        function openModal(imageSrc) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            modal.classList.add('active');
+            modalImg.src = imageSrc;
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+
+        // Close modal on click outside
+        document.getElementById('imageModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Initialize
+        if (currentUser) {
+            document.getElementById('userSelection').style.display = 'none';
+            document.getElementById('carouselContainer').style.display = 'block';
+            document.getElementById('currentUserDisplay').innerHTML = `
+                <strong>Votando como:</strong> ${currentUser}
+                <button onclick="changeUser()" style="float: right; padding: 8px 15px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">Trocar Usuário</button>
+            `;
+            initializeCarousels();
+        } else {
+            updateStats();
+        }
+    </script>
+</body>
+</html>

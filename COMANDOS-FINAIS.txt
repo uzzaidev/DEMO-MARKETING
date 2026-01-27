@@ -1,0 +1,97 @@
+========================================
+  COMANDOS PRONTOS - COPIE E COLE
+========================================
+
+OPÇÃO 1: AUTOMÁTICO (RECOMENDADO)
+----------------------------------
+Duplo clique em: 🎯-EXECUTAR-AGORA.bat
+
+Ele vai:
+✓ Copiar imagens para public/
+✓ git init
+✓ git add .
+✓ git commit
+✓ git push para GitHub
+
+OPÇÃO 2: MANUAL (Se o .bat não funcionar)
+------------------------------------------
+
+1. Abra o PowerShell ou CMD NESTA PASTA
+
+2. Copie e cole UM POR VEZ:
+
+# Copiar imagens
+mkdir public
+xcopy "..\01 - CARROSEL QUEM SOMOS" "public\01 - CARROSEL QUEM SOMOS\" /E /I /Y
+xcopy "..\02 - Carrosel o que é o uzzapp" "public\02 - Carrosel o que é o uzzapp\" /E /I /Y
+xcopy "..\03 -  CARROSSEL 05 COMO USAR IA NA SUA EMPRESA" "public\03 -  CARROSSEL 05 COMO USAR IA NA SUA EMPRESA\" /E /I /Y
+xcopy "..\04 - COMO USAR IA NA SUA EMPRESA" "public\04 - COMO USAR IA NA SUA EMPRESA\" /E /I /Y
+
+# Git
+git init
+git add .
+git commit -m "feat: Sistema de votação Next.js completo"
+git branch -M main
+git remote add origin https://github.com/uzzaidev/DEMO-MARKETING.git
+git push -u origin main
+
+========================================
+  DEPOIS DO PUSH
+========================================
+
+1. Abra: https://vercel.com/new
+2. Clique em "Import Git Repository"
+3. Selecione: uzzaidev/DEMO-MARKETING
+4. Project Name: demo-marketing (ou deixe automático)
+5. Framework Preset: Next.js (automático)
+6. Clique em "Deploy"
+7. Aguarde ~1 minuto
+8. COPIE O LINK!
+
+========================================
+  SEU LINK SERÁ ALGO COMO:
+========================================
+
+https://demo-marketing.vercel.app
+
+ou
+
+https://demo-marketing-[random].vercel.app
+
+========================================
+  MENSAGEM WHATSAPP
+========================================
+
+🗳️ VOTAÇÃO UZZAI - POSTAGENS INSTAGRAM
+
+Link: [COLE SEU LINK AQUI]
+
+Como votar:
+1. Abra o link
+2. Digite seu nome
+3. Vote com ⭐ e 💬
+4. Exporte o JSON
+5. Me envie o arquivo
+
+Funciona em qualquer dispositivo! 📱💻
+
+========================================
+  COMANDOS ÚTEIS
+========================================
+
+# Ver status
+git status
+
+# Ver remotes
+git remote -v
+
+# Ver logs
+git log --oneline
+
+# Testar localmente
+npm install
+npm run dev
+
+========================================
+  PRONTO!
+========================================
