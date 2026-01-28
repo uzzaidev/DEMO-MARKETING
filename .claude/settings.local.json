@@ -1,7 +1,30 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nPrimeiro commit: Estrutura inicial do repositório de marketing\n\nAdicionando todos os arquivos iniciais do projeto incluindo:\n- Carrosséis de conteúdo\n- Documentação\n- Configuração do projeto\n- Scripts de automação\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git config:*)",
+      "Bash(git remote add:*)",
+      "Bash(git push:*)",
+      "Bash(npm run build:*)",
+      "Bash(xcopy:*)",
+      "Bash(cmd.exe /c copiar-imagens.bat)",
+      "Bash(npm install)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: Adicionar imagens e corrigir configuração TypeScript\n\n- Adicionar pasta public/ com todas as imagens dos carrosséis\n- Corrigir tsconfig.json para suportar ES2015 e downlevelIteration\n- Adicionar package-lock.json\n- Build testado e funcionando\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfix: Corrigir vercel.json para compatibilidade com Next.js\n\n- Remover configurações de rotas estáticas\n- Adicionar configurações específicas para Next.js\n- Resolver conflito entre cleanUrls/trailingSlash e routes\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(npm run dev:*)",
+      "Bash(for dir in \"08 - CARROSEL PRIMEIRO\" \"9 - ESTILO-1-ANTES-DEPOIS-TIMELINE\" \"10 -estilo-1-timeline\" \"11 - estilo-2-comparacao\" \"12 - ESTILO-2-COMPARACAO-LATERAL\" \"13 - ESTILO-3-FLOWCHART-PROCESSO\" \"14 - estilo-3-flowchart\" \"15 - estilo-4-codigo\" \"16 - ESTILO-4-FUNDO-CODIGO-TECH\" \"17 - ESTILO-5-HUD-PREMIUM\" \"18 - estilo-6-depoimentos\" \"19 - estilo-7-infografico\" \"20 - estilo-8-tutorial\")",
+      "Bash(do if [ -d \"$dir\" ])",
+      "Bash(then cp -r \"$dir\" \"public/\")",
+      "Bash(fi)",
+      "Bash(done)",
+      "Bash(ls:*)",
+      "Bash(powershell -Command \"Get-ChildItem ''C:\\19 - Marketing\\REPOSITÓRIO\\public'' -Directory | Select-Object -First 20 Name\")",
+      "Bash(powershell -Command:*)",
+      "Bash(node scan-carousels.js:*)",
+      "Bash(node:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: Reorganizar carrosséis e adicionar sistema completo de feedback\n\nPrincipais mudanças:\n- Reorganizar estrutura com 16 carrosséis ativos (20 pastas, 4 vazias)\n- Refatorar sistema de feedback de vanilla JS para React integrado\n- Adicionar modo Galeria para visualização comparativa\n- Adicionar campo de comentários com auto-save\n- Adicionar identificação de usuário\n- Mover controles de exportação/estatísticas para topo direito\n- Criar carousels-data.ts com dados centralizados\n- Adicionar script scan-carousels.js para automação\n- Melhorar responsividade mobile\n- Adicionar documentação completa (guias e estratégias ICP)\n\nNovos carrosséis de design:\n- Timeline | Antes e Depois\n- Comparação | Lado a Lado\n- Flowchart | Processos\n- Tech | Fundo Código\n- HUD Premium | Futurista\n- Depoimentos | Social Proof\n- Infográfico | Dados e Stats\n- Tutorial | Passo a Passo\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git commit -m \"$(cat <<''EOF''\nchore: Remover pastas duplicadas após reorganização\n\n- Remover pastas antigas CAROUSEL-4-QUEM-E-UZZAI-VARB e CAROUSEL-UZZAI-QUEM-SOMOS\n- As pastas foram movidas para 06 - CAROUSEL-4-QUEM-E-UZZAI-VARB e 07 - CAROUSEL-UZZAI-QUEM-SOMOS\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>\nEOF\n)\")"
     ]
   }
 }
