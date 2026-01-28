@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Sistema de Votação - UzzAI",
-  description: "Vote nas melhores postagens de marketing para publicação no Instagram",
+  title: "UzzAi - Galeria de Carrosséis | Sistema de Feedback",
+  description: "Galeria completa de carrosséis de marketing da UzzAi com sistema integrado de feedback e avaliações",
 };
 
 export default function RootLayout({
@@ -13,7 +13,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body className="antialiased">
+      <body className="antialiased bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 min-h-screen">
         {children}
       </body>
     </html>

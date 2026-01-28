@@ -1,0 +1,542 @@
+📁 Escaneando carrosséis...
+
+✅ 01 - CARROSEL QUEM SOMOS
+   📊 32 imagens | Categoria: Institucional
+
+✅ 02 - Carrosel o que é o uzzapp
+   📊 17 imagens | Categoria: Produto
+
+✅ 03 -  CARROSSEL 05 COMO USAR IA NA SUA EMPRESA
+   📊 22 imagens | Categoria: Educacional
+
+✅ 04 - COMO USAR IA NA SUA EMPRESA
+   📊 23 imagens | Categoria: Educacional
+
+✅ 05 - Carrosel Processo UzzApp
+   📊 23 imagens | Categoria: Produto
+
+✅ 06 - CAROUSEL-4-QUEM-E-UZZAI-VARB
+   📊 6 imagens | Categoria: Institucional
+
+✅ 07 - CAROUSEL-UZZAI-QUEM-SOMOS
+   📊 10 imagens | Categoria: Institucional
+
+✅ 08 - CARROSEL PRIMEIRO
+   📊 12 imagens | Categoria: Geral
+
+✅ 10 -estilo-1-timeline
+   📊 4 imagens | Categoria: Design
+
+✅ 11 - estilo-2-comparacao
+   📊 4 imagens | Categoria: Design
+
+✅ 12 - ESTILO-2-COMPARACAO-LATERAL
+   📊 0 imagens | Categoria: Design
+
+✅ 13 - ESTILO-3-FLOWCHART-PROCESSO
+   📊 0 imagens | Categoria: Produto
+
+✅ 14 - estilo-3-flowchart
+   📊 4 imagens | Categoria: Design
+
+✅ 15 - estilo-4-codigo
+   📊 4 imagens | Categoria: Design
+
+✅ 16 - ESTILO-4-FUNDO-CODIGO-TECH
+   📊 0 imagens | Categoria: Design
+
+✅ 17 - ESTILO-5-HUD-PREMIUM
+   📊 4 imagens | Categoria: Design
+
+✅ 18 - estilo-6-depoimentos
+   📊 4 imagens | Categoria: Design
+
+✅ 19 - estilo-7-infografico
+   📊 4 imagens | Categoria: Design
+
+✅ 20 - estilo-8-tutorial
+   📊 4 imagens | Categoria: Educacional
+
+✅ 9 - ESTILO-1-ANTES-DEPOIS-TIMELINE
+   📊 0 imagens | Categoria: Design
+
+
+🎉 Total: 20 carrosséis encontrados
+
+📋 Array gerado:
+
+[
+  {
+    "id": 1,
+    "name": "CARROSEL QUEM SOMOS",
+    "folder": "01 - CARROSEL QUEM SOMOS",
+    "description": "Carrossel com 32 slides",
+    "slides": [
+      "Carrosel  quem eh uzzai2.png",
+      "Carrosel.png",
+      "Gemini_Generated_Image_21cw2c21cw2c21cw.png",
+      "Gemini_Generated_Image_2ifbap2ifbap2ifb (1).png",
+      "Gemini_Generated_Image_2ifbap2ifbap2ifb.png",
+      "Gemini_Generated_Image_4oltpc4oltpc4olt.png",
+      "Gemini_Generated_Image_6qorla6qorla6qor.png",
+      "Gemini_Generated_Image_7a4w7c7a4w7c7a4w.png",
+      "Gemini_Generated_Image_g0m5zsg0m5zsg0m5 (1).png",
+      "Gemini_Generated_Image_g0m5zsg0m5zsg0m5.png",
+      "Gemini_Generated_Image_jl0g9hjl0g9hjl0g (1).png",
+      "Gemini_Generated_Image_jl0g9hjl0g9hjl0g.png",
+      "Gemini_Generated_Image_maqnbxmaqnbxmaqn.png",
+      "Gemini_Generated_Image_njs70tnjs70tnjs7.png",
+      "Gemini_Generated_Image_nkbzhxnkbzhxnkbz.png",
+      "Gemini_Generated_Image_ohj29mohj29mohj2.png",
+      "Gemini_Generated_Image_uywalhuywalhuywa.png",
+      "Gemini_Generated_Image_vk4vxwvk4vxwvk4v.png",
+      "Gemini_Generated_Image_vt2wirvt2wirvt2w.png",
+      "INSTA 0.png",
+      "INSTA 0.png.png",
+      "INSTA 1.png.png",
+      "Screenshot_2.png",
+      "Screenshot_4.png",
+      "Screenshot_5.png",
+      "Screenshot_6.png",
+      "Screenshot_7.png",
+      "Screenshot_8.png",
+      "Screenshot_9.png",
+      "carrosel (2).png",
+      "carrosel (3).png",
+      "carrosel completo.png"
+    ],
+    "category": "Institucional",
+    "quality": 4,
+    "fileSize": "Variado",
+    "bestFor": [
+      "Instagram",
+      "LinkedIn"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Carrosel o que é o uzzapp",
+    "folder": "02 - Carrosel o que é o uzzapp",
+    "description": "Carrossel com 17 slides",
+    "slides": [
+      "1 (2).png",
+      "1.png",
+      "2 (2).png",
+      "2 (3).png",
+      "2.png",
+      "3 (2).png",
+      "3.png",
+      "4.png",
+      "5 (2).png",
+      "5 (3).png",
+      "5.png",
+      "6 (2).png",
+      "6 (3).png",
+      "6.png",
+      "66.png",
+      "666 (2).png",
+      "666.png"
+    ],
+    "category": "Produto",
+    "quality": 4,
+    "fileSize": "Variado",
+    "bestFor": [
+      "Apresentações",
+      "Site"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "CARROSSEL 05 COMO USAR IA NA SUA EMPRESA",
+    "folder": "03 -  CARROSSEL 05 COMO USAR IA NA SUA EMPRESA",
+    "description": "Carrossel com 22 slides",
+    "slides": [
+      "1 (1).png",
+      "1 (2).png",
+      "1 (3).png",
+      "2 (1).png",
+      "2 (2).png",
+      "2 (3).png",
+      "3 (1).png",
+      "3 (2).png",
+      "4 (1).png",
+      "4 (2).png",
+      "5 (1).png",
+      "5 (2).png",
+      "5 (3).png",
+      "6 (1).png",
+      "6 (2).png",
+      "7 (1).png",
+      "7 (2).png",
+      "7 (3).png",
+      "Gemini_Generated_Image_bt7gx5bt7gx5bt7g.png",
+      "Gemini_Generated_Image_bz1p4kbz1p4kbz1p.png",
+      "Gemini_Generated_Image_fw6hy1fw6hy1fw6h.png",
+      "Gemini_Generated_Image_jndac5jndac5jnda.png"
+    ],
+    "category": "Educacional",
+    "quality": 4,
+    "fileSize": "Variado",
+    "bestFor": [
+      "LinkedIn",
+      "Blog"
+    ]
+  },
+  {
+    "id": 4,
+    "name": "COMO USAR IA NA SUA EMPRESA",
+    "folder": "04 - COMO USAR IA NA SUA EMPRESA",
+    "description": "Carrossel com 23 slides",
+    "slides": [
+      "1 (1).png",
+      "1 (2).png",
+      "1 (3).png",
+      "2 (1).png",
+      "2 (2).png",
+      "2 (3).png",
+      "2 (4).png",
+      "3 (1).png",
+      "3 (2).png",
+      "3 (3).png",
+      "4 (1).png",
+      "4 (2).png",
+      "4 (3).png",
+      "4 (4).png",
+      "5 (1).png",
+      "5 (2).png",
+      "5 (3).png",
+      "6 (1).png",
+      "6 (2).png",
+      "6 (3).png",
+      "6 (4).png",
+      "Gemini_Generated_Image_ijytgijytgijytgi.png",
+      "Gemini_Generated_Image_tjtholtjtholtjth (1).png"
+    ],
+    "category": "Educacional",
+    "quality": 4,
+    "fileSize": "Variado",
+    "bestFor": [
+      "LinkedIn",
+      "Blog"
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Carrosel Processo UzzApp",
+    "folder": "05 - Carrosel Processo UzzApp",
+    "description": "Carrossel com 23 slides",
+    "slides": [
+      "1 (1).png",
+      "1 (2).png",
+      "1 (3).png",
+      "1 (4).png",
+      "1 (5).png",
+      "1 (6).png",
+      "1 (7).png",
+      "2 (1).png",
+      "2 (2).png",
+      "2 (3).png",
+      "2 (4).png",
+      "3 (1).png",
+      "3 (2).png",
+      "3 (3).png",
+      "4 (1).png",
+      "4 (2).png",
+      "5 (1).png",
+      "5 (2).png",
+      "5 (3).png",
+      "5 (4).png",
+      "5 (5).png",
+      "5 (6).png",
+      "5 (7).png"
+    ],
+    "category": "Produto",
+    "quality": 4,
+    "fileSize": "Variado",
+    "bestFor": [
+      "Apresentações",
+      "Site"
+    ]
+  },
+  {
+    "id": 6,
+    "name": "CAROUSEL-4-QUEM-E-UZZAI-VARB",
+    "folder": "06 - CAROUSEL-4-QUEM-E-UZZAI-VARB",
+    "description": "Carrossel com 6 slides",
+    "slides": [
+      "uzzai_slide_1_capa_identidade_1769546750138.png",
+      "uzzai_slide_2_missao_1769546773816.png",
+      "uzzai_slide_3_human_in_loop_1769546794252.png",
+      "uzzai_slide_4_produtos_solucoes_1769546819814.png",
+      "uzzai_slide_5_diferenciais_1769546840922.png",
+      "uzzai_slide_6_cta_variacao_b_1769546864988.png"
+    ],
+    "category": "Institucional",
+    "quality": 3,
+    "fileSize": "Variado",
+    "bestFor": [
+      "Instagram",
+      "LinkedIn"
+    ]
+  },
+  {
+    "id": 7,
+    "name": "CAROUSEL-UZZAI-QUEM-SOMOS",
+    "folder": "07 - CAROUSEL-UZZAI-QUEM-SOMOS",
+    "description": "Carrossel com 10 slides",
+    "slides": [
+      "slide_1_opcao_1_liberdade_1769546185824.png",
+      "slide_1_opcao_2_automacao_1769546214496.png",
+      "slide_1_opcao_3_humanizacao_1769546234753.png",
+      "slide_1_opcao_4_resultados_1769546254568.png",
+      "slide_2_origem_uzguri_1769546273189.png",
+      "slide_3_missao_1769546291721.png",
+      "slide_4_produtos_ecossistema_1769546312246.png",
+      "slide_5_time_equipe_1769546330084.png",
+      "slide_6_diferenciais_porque_1769546349114.png",
+      "slide_7_cta_proximo_passo_1769546367859.png"
+    ],
+    "category": "Institucional",
+    "quality": 4,
+    "fileSize": "Variado",
+    "bestFor": [
+      "Instagram",
+      "LinkedIn"
+    ]
+  },
+  {
+    "id": 8,
+    "name": "CARROSEL PRIMEIRO",
+    "folder": "08 - CARROSEL PRIMEIRO",
+    "description": "Carrossel com 12 slides",
+    "slides": [
+      "1 (1).png",
+      "1 (2).png",
+      "1 (3).png",
+      "1 (4).png",
+      "1.png",
+      "2 (1).png",
+      "2 (2).png",
+      "3 (1).png",
+      "3 (2).png",
+      "4.png",
+      "5.png",
+      "6.png"
+    ],
+    "category": "Geral",
+    "quality": 4,
+    "fileSize": "Variado",
+    "bestFor": [
+      "Instagram",
+      "Stories"
+    ]
+  },
+  {
+    "id": 9,
+    "name": "estilo-1-timeline",
+    "folder": "10 -estilo-1-timeline",
+    "description": "Carrossel com 4 slides",
+    "slides": [
+      "var1-atendimento-noturno.png",
+      "var2-perda-vendas.png",
+      "var3-24-7-vs-comercial.png",
+      "var4-impacto-financeiro.png"
+    ],
+    "category": "Design",
+    "quality": 2,
+    "fileSize": "Variado",
+    "bestFor": [
+      "Instagram",
+      "Stories"
+    ]
+  },
+  {
+    "id": 10,
+    "name": "estilo-2-comparacao",
+    "folder": "11 - estilo-2-comparacao",
+    "description": "Carrossel com 4 slides",
+    "slides": [
+      "var1-chatbot-comparacao.png",
+      "var2-manual-vs-automatizado.png",
+      "var3-features-basicas-vs-avancadas.png",
+      "var4-roi-comparacao.png"
+    ],
+    "category": "Design",
+    "quality": 2,
+    "fileSize": "Variado",
+    "bestFor": [
+      "Instagram",
+      "Stories"
+    ]
+  },
+  {
+    "id": 11,
+    "name": "ESTILO-2-COMPARACAO-LATERAL",
+    "folder": "12 - ESTILO-2-COMPARACAO-LATERAL",
+    "description": "Carrossel com 0 slides",
+    "slides": [],
+    "category": "Design",
+    "quality": 2,
+    "fileSize": "Variado",
+    "bestFor": [
+      "Instagram",
+      "Stories"
+    ]
+  },
+  {
+    "id": 12,
+    "name": "ESTILO-3-FLOWCHART-PROCESSO",
+    "folder": "13 - ESTILO-3-FLOWCHART-PROCESSO",
+    "description": "Carrossel com 0 slides",
+    "slides": [],
+    "category": "Produto",
+    "quality": 2,
+    "fileSize": "Variado",
+    "bestFor": [
+      "Apresentações",
+      "Site"
+    ]
+  },
+  {
+    "id": 13,
+    "name": "estilo-3-flowchart",
+    "folder": "14 - estilo-3-flowchart",
+    "description": "Carrossel com 4 slides",
+    "slides": [
+      "var1-split-pix-automatico.png",
+      "var2-processo-implementacao.png",
+      "var3-fluxo-atendimento.png",
+      "var4-integracao-sistemas.png"
+    ],
+    "category": "Design",
+    "quality": 2,
+    "fileSize": "Variado",
+    "bestFor": [
+      "Instagram",
+      "Stories"
+    ]
+  },
+  {
+    "id": 14,
+    "name": "estilo-4-codigo",
+    "folder": "15 - estilo-4-codigo",
+    "description": "Carrossel com 4 slides",
+    "slides": [
+      "var1-clinica-piloto-automatico.png",
+      "var2-ia-conversa-humano.png",
+      "var3-automacao-processos.png",
+      "var4-tecnologia-ia.png"
+    ],
+    "category": "Design",
+    "quality": 2,
+    "fileSize": "Variado",
+    "bestFor": [
+      "Instagram",
+      "Stories"
+    ]
+  },
+  {
+    "id": 15,
+    "name": "ESTILO-4-FUNDO-CODIGO-TECH",
+    "folder": "16 - ESTILO-4-FUNDO-CODIGO-TECH",
+    "description": "Carrossel com 0 slides",
+    "slides": [],
+    "category": "Design",
+    "quality": 2,
+    "fileSize": "Variado",
+    "bestFor": [
+      "Instagram",
+      "Stories"
+    ]
+  },
+  {
+    "id": 16,
+    "name": "ESTILO-5-HUD-PREMIUM",
+    "folder": "17 - ESTILO-5-HUD-PREMIUM",
+    "description": "Carrossel com 4 slides",
+    "slides": [
+      "var1-quem-e-uzzai.png",
+      "var2-features-cards.png",
+      "var3-beneficios-destaque.png",
+      "var4-identidade-premium.png"
+    ],
+    "category": "Design",
+    "quality": 2,
+    "fileSize": "Variado",
+    "bestFor": [
+      "Instagram",
+      "Stories"
+    ]
+  },
+  {
+    "id": 17,
+    "name": "estilo-6-depoimentos",
+    "folder": "18 - estilo-6-depoimentos",
+    "description": "Carrossel com 4 slides",
+    "slides": [
+      "var1-depoimento-clinica.png",
+      "var2-metricas-impacto.png",
+      "var3-antes-depois-cliente.png",
+      "var4-galeria-clientes.png"
+    ],
+    "category": "Design",
+    "quality": 2,
+    "fileSize": "Variado",
+    "bestFor": [
+      "Instagram",
+      "Stories"
+    ]
+  },
+  {
+    "id": 18,
+    "name": "estilo-7-infografico",
+    "folder": "19 - estilo-7-infografico",
+    "description": "Carrossel com 4 slides",
+    "slides": [
+      "var1-stats-mercado.png",
+      "var2-comparacao-custos.png",
+      "var3-jornada-numeros.png",
+      "var4-tempo-economizado.png"
+    ],
+    "category": "Design",
+    "quality": 2,
+    "fileSize": "Variado",
+    "bestFor": [
+      "Instagram",
+      "Stories"
+    ]
+  },
+  {
+    "id": 19,
+    "name": "estilo-8-tutorial",
+    "folder": "20 - estilo-8-tutorial",
+    "description": "Carrossel com 4 slides",
+    "slides": [
+      "var1-3-passos-simples.png",
+      "var2-checklist-implementacao.png",
+      "var3-fluxo-configuracao.png",
+      "var4-guia-rapido-uso.png"
+    ],
+    "category": "Educacional",
+    "quality": 2,
+    "fileSize": "Variado",
+    "bestFor": [
+      "LinkedIn",
+      "Blog"
+    ]
+  },
+  {
+    "id": 20,
+    "name": "ESTILO-1-ANTES-DEPOIS-TIMELINE",
+    "folder": "9 - ESTILO-1-ANTES-DEPOIS-TIMELINE",
+    "description": "Carrossel com 0 slides",
+    "slides": [],
+    "category": "Design",
+    "quality": 2,
+    "fileSize": "Variado",
+    "bestFor": [
+      "Instagram",
+      "Stories"
+    ]
+  }
+]
