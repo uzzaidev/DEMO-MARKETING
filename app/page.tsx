@@ -1471,16 +1471,21 @@ export default function CarouselGallery() {
                                 setSelectedPostDetails(post);
                                 setShowPostDetailsModal(true);
                               }}
-                              className={`text-xs px-1 py-0.5 rounded truncate cursor-pointer hover:scale-105 transition-transform flex items-center gap-1 ${
-                                post.tipo === 'Reels' ? 'bg-blue-500/20 text-blue-300 border-l-2 border-blue-500' :
-                                post.tipo === 'Feed' ? 'bg-purple-500/20 text-purple-300 border-l-2 border-purple-500' :
-                                post.tipo === 'Carrossel' ? 'bg-green-500/20 text-green-300 border-l-2 border-green-500' :
-                                'bg-yellow-500/20 text-yellow-300 border-l-2 border-yellow-500'
+                              className={`text-xs px-2 py-1 rounded cursor-pointer hover:scale-105 transition-transform ${
+                                post.tipo === 'Reels' ? 'bg-blue-500/20 border-l-2 border-blue-500' :
+                                post.tipo === 'Feed' ? 'bg-purple-500/20 border-l-2 border-purple-500' :
+                                post.tipo === 'Carrossel' ? 'bg-green-500/20 border-l-2 border-green-500' :
+                                'bg-yellow-500/20 border-l-2 border-yellow-500'
                               }`}
                               title={`${post.titulo} - ${post.canal}`}
                             >
-                              <span>{getTipoIcon(post.tipo)}</span>
-                              <span>{getChannelIcon(post.canal)}</span>
+                              <div className="flex items-center gap-1 mb-0.5">
+                                <span>{getTipoIcon(post.tipo)}</span>
+                                <span>{getChannelIcon(post.canal)}</span>
+                              </div>
+                              <div className="text-white font-medium text-[10px] leading-tight truncate">
+                                {post.titulo}
+                              </div>
                             </div>
                           ))}
                           {dayPosts.length > 3 && (
