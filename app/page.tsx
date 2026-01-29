@@ -69,6 +69,11 @@ export default function CarouselGallery() {
   const [currentYear, setCurrentYear] = useState<number>(new Date().getFullYear());
   const [showAddPostModal, setShowAddPostModal] = useState(false);
   const [selectedPostForCalendar, setSelectedPostForCalendar] = useState<{carousel: Carousel, slideIndex: number} | null>(null);
+  const [selectedPostDetails, setSelectedPostDetails] = useState<PostCalendario | null>(null);
+  const [showPostDetailsModal, setShowPostDetailsModal] = useState(false);
+  const [filterCalendarioCanal, setFilterCalendarioCanal] = useState<string>('');
+  const [filterCalendarioTipo, setFilterCalendarioTipo] = useState<string>('');
+  const [filterCalendarioProjeto, setFilterCalendarioProjeto] = useState<string>('');
 
   // Carregar nome do usuário e feedbacks do localStorage
   useEffect(() => {
@@ -388,6 +393,55 @@ export default function CarouselGallery() {
     localStorage.setItem('calendario-posts', JSON.stringify(postsImportados));
     alert(`✅ ${postsImportados.length} posts importados do calendário oficial!`);
   };
+
+  // Remover post do calendário
+  const removerPost = (postId: string) => {
+    if (confirm('Tem certeza que deseja remover este post do calendário?')) {
+      const novosPost = postsCalendario.filter(p => p.id !== postId);
+      setPostsCalendario(novosPost);
+      localStorage.setItem('calendario-posts', JSON.stringify(novosPost));
+      setShowPostDetailsModal(false);
+      alert('Post removido com sucesso!');
+    }
+  };
+
+  // Mudar status do post
+  const mudarStatusPost = (postId: string, novoStatus: 'agendado' | 'publicado' | 'arquivado') => {
+    const novosPost = postsCalendario.map(p =>
+      p.id === postId ? { ...p, status: novoStatus } : p
+    );
+    setPostsCalendario(novosPost);
+    localStorage.setItem('calendario-posts', JSON.stringify(novosPost));
+
+    // Atualizar o post selecionado se for o mesmo
+    if (selectedPostDetails && selectedPostDetails.id === postId) {
+      setSelectedPostDetails({ ...selectedPostDetails, status: novoStatus });
+    }
+  };
+
+  // Função para obter ícone da plataforma
+  const getChannelIcon = (canal: string) => {
+    if (canal === 'LinkedIn') return '💼';
+    if (canal === 'Instagram') return '📸';
+    if (canal === 'Site') return '🌐';
+    return '📱';
+  };
+
+  // Função para obter ícone do tipo
+  const getTipoIcon = (tipo: string) => {
+    if (tipo === 'Reels') return '🎥';
+    if (tipo === 'Feed') return '📝';
+    if (tipo === 'Carrossel') return '🎠';
+    if (tipo === 'Stories') return '⚡';
+    return '📄';
+  };
+
+  // Filtrar posts do calendário
+  const postsCalendarioFiltrados = postsCalendario.filter(post => {
+    return (!filterCalendarioCanal || post.canal === filterCalendarioCanal) &&
+           (!filterCalendarioTipo || post.tipo === filterCalendarioTipo) &&
+           (!filterCalendarioProjeto || post.projeto === filterCalendarioProjeto);
+  });
 
   // Componentes auxiliares
   const renderStars = (quality: number) => {
@@ -1320,9 +1374,56 @@ export default function CarouselGallery() {
                 </div>
               </div>
 
+              {/* Filtros do Calendário */}
+              <div className="flex flex-wrap gap-3 mb-4">
+                <select
+                  value={filterCalendarioCanal}
+                  onChange={(e) => setFilterCalendarioCanal(e.target.value)}
+                  className="px-3 py-2 bg-slate-700 rounded-lg text-sm border border-slate-600 focus:outline-none focus:border-blue-500"
+                >
+                  <option value="">Todos os Canais</option>
+                  <option value="LinkedIn">💼 LinkedIn</option>
+                  <option value="Instagram">📸 Instagram</option>
+                  <option value="Site">🌐 Site</option>
+                </select>
+                <select
+                  value={filterCalendarioTipo}
+                  onChange={(e) => setFilterCalendarioTipo(e.target.value)}
+                  className="px-3 py-2 bg-slate-700 rounded-lg text-sm border border-slate-600 focus:outline-none focus:border-blue-500"
+                >
+                  <option value="">Todos os Tipos</option>
+                  <option value="Reels">🎥 Reels</option>
+                  <option value="Feed">📝 Feed</option>
+                  <option value="Carrossel">🎠 Carrossel</option>
+                  <option value="Stories">⚡ Stories</option>
+                </select>
+                <select
+                  value={filterCalendarioProjeto}
+                  onChange={(e) => setFilterCalendarioProjeto(e.target.value)}
+                  className="px-3 py-2 bg-slate-700 rounded-lg text-sm border border-slate-600 focus:outline-none focus:border-blue-500"
+                >
+                  <option value="">Todos os Projetos</option>
+                  {Array.from(new Set(postsCalendario.map(p => p.projeto))).map(projeto => (
+                    <option key={projeto} value={projeto}>{projeto}</option>
+                  ))}
+                </select>
+                {(filterCalendarioCanal || filterCalendarioTipo || filterCalendarioProjeto) && (
+                  <button
+                    onClick={() => {
+                      setFilterCalendarioCanal('');
+                      setFilterCalendarioTipo('');
+                      setFilterCalendarioProjeto('');
+                    }}
+                    className="px-3 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-sm transition-colors"
+                  >
+                    🗑️ Limpar Filtros
+                  </button>
+                )}
+              </div>
+
               {/* Grid do Calendário */}
               <div className="grid grid-cols-7 gap-2 mb-2">
-                {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(day => (
+                {['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'].map(day => (
                   <div key={day} className="text-center py-2 text-sm font-semibold text-gray-400">
                     {day}
                   </div>
@@ -1331,7 +1432,9 @@ export default function CarouselGallery() {
 
               <div className="grid grid-cols-7 gap-2">
                 {(() => {
-                  const firstDay = new Date(currentYear, currentMonth - 1, 1).getDay();
+                  // Ajustar para começar na segunda-feira (0 = domingo, precisamos transformar para 0 = segunda)
+                  const firstDayOfMonth = new Date(currentYear, currentMonth - 1, 1).getDay();
+                  const firstDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1; // Segunda = 0
                   const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
                   const days = [];
 
@@ -1345,31 +1448,44 @@ export default function CarouselGallery() {
                   // Dias do mês
                   for (let day = 1; day <= daysInMonth; day++) {
                     const dateString = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                    const dayPosts = postsCalendario.filter(p => p.data === dateString);
+                    const dayPosts = postsCalendarioFiltrados.filter(p => p.data === dateString);
+                    const today = new Date().toISOString().split('T')[0];
+                    const isToday = dateString === today;
 
                     days.push(
                       <div
                         key={day}
-                        className="aspect-square bg-slate-700 rounded-lg p-2 overflow-hidden hover:bg-slate-600 transition-colors"
+                        className={`aspect-square rounded-lg p-2 overflow-hidden transition-all cursor-pointer ${
+                          isToday
+                            ? 'bg-blue-900/30 border-2 border-blue-500'
+                            : 'bg-slate-700 hover:bg-slate-600'
+                        }`}
                       >
-                        <div className="text-sm font-semibold text-gray-300 mb-1">{day}</div>
+                        <div className={`text-sm font-semibold mb-1 ${isToday ? 'text-blue-300' : 'text-gray-300'}`}>
+                          {day}
+                        </div>
                         <div className="space-y-1">
-                          {dayPosts.slice(0, 2).map((post, idx) => (
+                          {dayPosts.slice(0, 3).map((post, idx) => (
                             <div
                               key={idx}
-                              className={`text-xs px-1 py-0.5 rounded truncate ${
-                                post.tipo === 'Reels' ? 'bg-blue-500/20 text-blue-300' :
-                                post.tipo === 'Feed' ? 'bg-purple-500/20 text-purple-300' :
-                                post.tipo === 'Carrossel' ? 'bg-green-500/20 text-green-300' :
-                                'bg-yellow-500/20 text-yellow-300'
+                              onClick={() => {
+                                setSelectedPostDetails(post);
+                                setShowPostDetailsModal(true);
+                              }}
+                              className={`text-xs px-1 py-0.5 rounded truncate cursor-pointer hover:scale-105 transition-transform flex items-center gap-1 ${
+                                post.tipo === 'Reels' ? 'bg-blue-500/20 text-blue-300 border-l-2 border-blue-500' :
+                                post.tipo === 'Feed' ? 'bg-purple-500/20 text-purple-300 border-l-2 border-purple-500' :
+                                post.tipo === 'Carrossel' ? 'bg-green-500/20 text-green-300 border-l-2 border-green-500' :
+                                'bg-yellow-500/20 text-yellow-300 border-l-2 border-yellow-500'
                               }`}
-                              title={post.titulo}
+                              title={`${post.titulo} - ${post.canal}`}
                             >
-                              {post.tipo}
+                              <span>{getTipoIcon(post.tipo)}</span>
+                              <span>{getChannelIcon(post.canal)}</span>
                             </div>
                           ))}
-                          {dayPosts.length > 2 && (
-                            <div className="text-xs text-gray-400">+{dayPosts.length - 2}</div>
+                          {dayPosts.length > 3 && (
+                            <div className="text-xs text-gray-400 font-semibold">+{dayPosts.length - 3} mais</div>
                           )}
                         </div>
                       </div>
@@ -1391,12 +1507,16 @@ export default function CarouselGallery() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {postsCalendario
+                  {postsCalendarioFiltrados
                     .sort((a, b) => new Date(a.data).getTime() - new Date(b.data).getTime())
                     .map(post => (
                       <div
                         key={post.id}
-                        className="bg-slate-800 rounded-xl overflow-hidden border border-slate-700 hover:border-blue-500/50 transition-colors"
+                        onClick={() => {
+                          setSelectedPostDetails(post);
+                          setShowPostDetailsModal(true);
+                        }}
+                        className="bg-slate-800 rounded-xl overflow-hidden border border-slate-700 hover:border-blue-500/50 transition-all cursor-pointer hover:scale-105"
                       >
                         <div className="relative aspect-square">
                           <Image
@@ -1406,33 +1526,178 @@ export default function CarouselGallery() {
                             className="object-cover"
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                           />
+                          {/* Status badge */}
+                          <div className={`absolute top-2 right-2 px-2 py-1 rounded-lg text-xs font-semibold ${
+                            post.status === 'agendado' ? 'bg-blue-600' :
+                            post.status === 'publicado' ? 'bg-green-600' :
+                            'bg-gray-600'
+                          }`}>
+                            {post.status === 'agendado' ? '⏳' : post.status === 'publicado' ? '✅' : '📦'}
+                          </div>
                         </div>
                         <div className="p-4">
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                          <div className="flex items-center gap-2 mb-2 flex-wrap">
+                            <span className={`px-2 py-1 rounded text-xs font-semibold flex items-center gap-1 ${
                               post.tipo === 'Reels' ? 'bg-blue-500/20 text-blue-300' :
                               post.tipo === 'Feed' ? 'bg-purple-500/20 text-purple-300' :
                               post.tipo === 'Carrossel' ? 'bg-green-500/20 text-green-300' :
                               'bg-yellow-500/20 text-yellow-300'
                             }`}>
-                              {post.tipo}
+                              {getTipoIcon(post.tipo)} {post.tipo}
                             </span>
-                            <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                            <span className={`px-2 py-1 rounded text-xs font-semibold flex items-center gap-1 ${
                               post.canal === 'LinkedIn' ? 'bg-blue-600 text-white' :
                               post.canal === 'Instagram' ? 'bg-pink-600 text-white' :
                               'bg-slate-600 text-white'
                             }`}>
-                              {post.canal}
+                              {getChannelIcon(post.canal)} {post.canal}
                             </span>
                           </div>
                           <h4 className="font-semibold text-sm mb-2 line-clamp-2">{post.titulo}</h4>
-                          <p className="text-xs text-gray-400 mb-2">📅 {new Date(post.data).toLocaleDateString('pt-BR')}</p>
-                          <p className="text-xs text-gray-500">{post.carouselName}</p>
+                          <p className="text-xs text-gray-400 mb-1">📅 {new Date(post.data).toLocaleDateString('pt-BR')}</p>
+                          <p className="text-xs text-gray-500">📂 {post.projeto}</p>
                         </div>
                       </div>
                     ))}
                 </div>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Detalhes do Post */}
+      {showPostDetailsModal && selectedPostDetails && (
+        <div
+          className="fixed inset-0 z-[80] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4"
+          onClick={() => setShowPostDetailsModal(false)}
+        >
+          <div
+            className="bg-gradient-to-br from-slate-900 to-slate-800 backdrop-blur-md rounded-2xl max-w-4xl w-full border border-slate-700 max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header do Modal */}
+            <div className="sticky top-0 bg-slate-900/95 backdrop-blur-md border-b border-slate-700 p-6 z-10">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <h2 className="text-2xl font-bold mb-2">{selectedPostDetails.titulo}</h2>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className={`px-3 py-1 rounded-lg text-sm font-semibold flex items-center gap-2 ${
+                      selectedPostDetails.tipo === 'Reels' ? 'bg-blue-500/20 text-blue-300 border border-blue-500/50' :
+                      selectedPostDetails.tipo === 'Feed' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/50' :
+                      selectedPostDetails.tipo === 'Carrossel' ? 'bg-green-500/20 text-green-300 border border-green-500/50' :
+                      'bg-yellow-500/20 text-yellow-300 border border-yellow-500/50'
+                    }`}>
+                      {getTipoIcon(selectedPostDetails.tipo)} {selectedPostDetails.tipo}
+                    </span>
+                    <span className={`px-3 py-1 rounded-lg text-sm font-semibold flex items-center gap-2 ${
+                      selectedPostDetails.canal === 'LinkedIn' ? 'bg-blue-600 text-white' :
+                      selectedPostDetails.canal === 'Instagram' ? 'bg-pink-600 text-white' :
+                      'bg-slate-700 text-white'
+                    }`}>
+                      {getChannelIcon(selectedPostDetails.canal)} {selectedPostDetails.canal}
+                    </span>
+                    <span className={`px-3 py-1 rounded-lg text-sm font-semibold ${
+                      selectedPostDetails.status === 'agendado' ? 'bg-blue-600/20 text-blue-300 border border-blue-500/50' :
+                      selectedPostDetails.status === 'publicado' ? 'bg-green-600/20 text-green-300 border border-green-500/50' :
+                      'bg-gray-600/20 text-gray-300 border border-gray-500/50'
+                    }`}>
+                      {selectedPostDetails.status === 'agendado' ? '⏳ Agendado' :
+                       selectedPostDetails.status === 'publicado' ? '✅ Publicado' :
+                       '📦 Arquivado'}
+                    </span>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowPostDetailsModal(false)}
+                  className="text-gray-400 hover:text-white text-2xl w-8 h-8 flex items-center justify-center"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+
+            {/* Conteúdo do Modal */}
+            <div className="p-6">
+              {/* Imagem */}
+              <div className="relative aspect-square w-full max-w-2xl mx-auto rounded-xl overflow-hidden mb-6 border border-slate-700">
+                <Image
+                  src={selectedPostDetails.imagePath}
+                  alt={selectedPostDetails.titulo}
+                  fill
+                  className="object-cover"
+                  sizes="800px"
+                  priority
+                />
+              </div>
+
+              {/* Informações */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                  <h3 className="font-semibold mb-3 text-blue-400">📋 Informações do Post</h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">📅 Data:</span>
+                      <span className="font-semibold">{new Date(selectedPostDetails.data).toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' })}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">📂 Projeto:</span>
+                      <span className="font-semibold">{selectedPostDetails.projeto}</span>
+                    </div>
+                    {selectedPostDetails.rating && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">⭐ Avaliação:</span>
+                        <span className="font-semibold text-yellow-400">{selectedPostDetails.rating}/5</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                  <h3 className="font-semibold mb-3 text-purple-400">⚙️ Ações Rápidas</h3>
+                  <div className="space-y-2">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => mudarStatusPost(selectedPostDetails.id, 'agendado')}
+                        disabled={selectedPostDetails.status === 'agendado'}
+                        className="flex-1 px-3 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-sm font-semibold transition-colors"
+                      >
+                        ⏳ Agendar
+                      </button>
+                      <button
+                        onClick={() => mudarStatusPost(selectedPostDetails.id, 'publicado')}
+                        disabled={selectedPostDetails.status === 'publicado'}
+                        className="flex-1 px-3 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-sm font-semibold transition-colors"
+                      >
+                        ✅ Publicar
+                      </button>
+                    </div>
+                    <button
+                      onClick={() => mudarStatusPost(selectedPostDetails.id, 'arquivado')}
+                      disabled={selectedPostDetails.status === 'arquivado'}
+                      className="w-full px-3 py-2 bg-gray-600 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg text-sm font-semibold transition-colors"
+                    >
+                      📦 Arquivar
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Botão Remover */}
+              <div className="flex gap-3">
+                <button
+                  onClick={() => removerPost(selectedPostDetails.id)}
+                  className="flex-1 px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+                >
+                  🗑️ Remover do Calendário
+                </button>
+                <button
+                  onClick={() => setShowPostDetailsModal(false)}
+                  className="flex-1 px-6 py-3 bg-slate-700 hover:bg-slate-600 rounded-lg font-semibold transition-colors"
+                >
+                  Fechar
+                </button>
+              </div>
             </div>
           </div>
         </div>
