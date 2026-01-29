@@ -394,6 +394,41 @@ export default function CarouselGallery() {
     alert(`✅ ${postsImportados.length} posts importados do calendário oficial!`);
   };
 
+  // Importar apenas 7 posts para teste
+  const importCalendarioTeste = () => {
+    if (postsCalendario.length > 0) {
+      const confirmOverwrite = confirm(`Você já tem ${postsCalendario.length} posts no calendário. Deseja substituir por 7 posts de teste?`);
+      if (!confirmOverwrite) return;
+    }
+
+    // Importar apenas os primeiros 7 posts (dia 09/02 - Post 35 e outros do mesmo dia)
+    const postsTeste = calendarioPosts.slice(0, 7);
+
+    const postsImportados: PostCalendario[] = postsTeste.map(post => {
+      const slug = createSlug(post.titulo);
+      return {
+        id: `teste-${post.id}-${post.canal}`,
+        carouselId: post.id,
+        carouselName: `Post ${post.id}`,
+        slideIndex: 0,
+        slideName: `${post.tipo}-${post.canal}`,
+        imagePath: `/calendario-posts/post-${post.id}-${slug}/preview.jpg`,
+        tipo: post.tipo,
+        titulo: post.titulo,
+        canal: post.canal,
+        data: post.data,
+        status: post.status,
+        projeto: post.projeto || 'Outros',
+        addedAt: new Date().toISOString(),
+        rating: 5
+      };
+    });
+
+    setPostsCalendario(postsImportados);
+    localStorage.setItem('calendario-posts', JSON.stringify(postsImportados));
+    alert(`✅ ${postsImportados.length} posts de teste importados (primeiros 7 posts do calendário)!`);
+  };
+
   // Remover post do calendário
   const removerPost = (postId: string) => {
     if (confirm('Tem certeza que deseja remover este post do calendário?')) {
@@ -1186,6 +1221,15 @@ export default function CarouselGallery() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                     </svg>
                     ⚡ Importar Calendário Oficial ({calendarioPosts.length} posts)
+                  </button>
+                  <button
+                    onClick={importCalendarioTeste}
+                    className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 rounded-lg transition-colors flex items-center gap-2 font-semibold"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    🧪 Importar Calendário Teste (7 posts)
                   </button>
                   <button
                     onClick={exportCalendarioJSON}
