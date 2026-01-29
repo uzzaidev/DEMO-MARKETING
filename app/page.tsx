@@ -28,6 +28,23 @@ interface Carousel {
   bestFor: string[];
 }
 
+interface PostCalendario {
+  id: string;
+  carouselId: number;
+  carouselName: string;
+  slideIndex: number;
+  slideName: string;
+  imagePath: string;
+  tipo: 'Reels' | 'Feed' | 'Carrossel' | 'Stories';
+  titulo: string;
+  canal: 'LinkedIn' | 'Instagram' | 'Site';
+  data: string; // YYYY-MM-DD
+  status: 'agendado' | 'publicado' | 'arquivado';
+  projeto: string;
+  addedAt: string;
+  rating?: number;
+}
+
 
 export default function CarouselGallery() {
   // Estados principais
@@ -43,6 +60,14 @@ export default function CarouselGallery() {
   const [tempComment, setTempComment] = useState<string>('');
   const [showExportModal, setShowExportModal] = useState(false);
   const [showNamePrompt, setShowNamePrompt] = useState(false);
+  const [showCalendario, setShowCalendario] = useState(false);
+
+  // Estados do Calendário Editorial
+  const [postsCalendario, setPostsCalendario] = useState<PostCalendario[]>([]);
+  const [currentMonth, setCurrentMonth] = useState<number>(new Date().getMonth() + 1);
+  const [currentYear, setCurrentYear] = useState<number>(new Date().getFullYear());
+  const [showAddPostModal, setShowAddPostModal] = useState(false);
+  const [selectedPostForCalendar, setSelectedPostForCalendar] = useState<{carousel: Carousel, slideIndex: number} | null>(null);
 
   // Carregar nome do usuário e feedbacks do localStorage
   useEffect(() => {
@@ -69,6 +94,25 @@ export default function CarouselGallery() {
       localStorage.setItem('carousel-feedbacks', JSON.stringify(feedbacks));
     }
   }, [feedbacks]);
+
+  // Carregar posts do calendário do localStorage
+  useEffect(() => {
+    const savedPosts = localStorage.getItem('calendario-posts');
+    if (savedPosts) {
+      try {
+        setPostsCalendario(JSON.parse(savedPosts));
+      } catch (e) {
+        console.error('Erro ao carregar posts do calendário:', e);
+      }
+    }
+  }, []);
+
+  // Salvar posts do calendário no localStorage
+  useEffect(() => {
+    if (postsCalendario.length > 0) {
+      localStorage.setItem('calendario-posts', JSON.stringify(postsCalendario));
+    }
+  }, [postsCalendario]);
 
   // Salvar nome do usuário
   const saveUserName = (name: string) => {
@@ -255,6 +299,63 @@ export default function CarouselGallery() {
     }
   };
 
+  // Funções do Calendário Editorial
+  const exportCalendarioJSON = () => {
+    const data = {
+      exportDate: new Date().toISOString(),
+      userName: currentUserName,
+      totalPosts: postsCalendario.length,
+      posts: postsCalendario.sort((a, b) => new Date(a.data).getTime() - new Date(b.data).getTime())
+    };
+
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `calendario-editorial-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const importCalendarioJSON = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            const data = JSON.parse(event.target?.result as string);
+            if (data.posts && Array.isArray(data.posts)) {
+              setPostsCalendario(data.posts);
+              localStorage.setItem('calendario-posts', JSON.stringify(data.posts));
+              alert(`✅ ${data.posts.length} posts importados com sucesso!`);
+            } else {
+              alert('❌ Arquivo JSON inválido!');
+            }
+          } catch (error) {
+            alert('❌ Erro ao ler o arquivo JSON!');
+            console.error(error);
+          }
+        };
+        reader.readAsText(file);
+      }
+    };
+    input.click();
+  };
+
+  const clearCalendario = () => {
+    if (confirm('Tem certeza que deseja limpar TODOS os posts do calendário? Esta ação não pode ser desfeita!')) {
+      setPostsCalendario([]);
+      localStorage.removeItem('calendario-posts');
+      alert('Todos os posts foram removidos do calendário!');
+    }
+  };
+
   // Componentes auxiliares
   const renderStars = (quality: number) => {
     return (
@@ -342,6 +443,18 @@ export default function CarouselGallery() {
               <div>💬 Comentários: <strong className="text-white">{stats.withComments}</strong></div>
             </div>
           </div>
+
+          {/* Botão Calendário Editorial */}
+          <button
+            onClick={() => setShowCalendario(true)}
+            className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg px-4 py-3 shadow-lg shadow-blue-500/50 hover:scale-105 transition-transform flex items-center gap-2"
+            title="Calendário Editorial"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span className="font-semibold hidden md:inline">📅 Calendário</span>
+          </button>
 
           {/* Botão Exportar */}
           <button
@@ -563,6 +676,24 @@ export default function CarouselGallery() {
               {tempRating > 0 && (
                 <div className="text-center text-sm text-green-400">
                   ✓ Feedback salvo automaticamente
+                </div>
+              )}
+
+              {/* Botão Adicionar ao Calendário */}
+              {tempRating >= 4 && (
+                <div className="mt-4 pt-4 border-t border-white/20">
+                  <button
+                    onClick={() => {
+                      setSelectedPostForCalendar({ carousel: selectedCarousel, slideIndex: selectedSlide });
+                      setShowAddPostModal(true);
+                    }}
+                    className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    📅 Adicionar ao Calendário Editorial
+                  </button>
                 </div>
               )}
             </div>
@@ -790,6 +921,477 @@ export default function CarouselGallery() {
             >
               Fechar
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Modal: Adicionar Post ao Calendário */}
+      {showAddPostModal && selectedPostForCalendar && (
+        <div
+          className="fixed inset-0 z-[80] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4"
+          onClick={() => setShowAddPostModal(false)}
+        >
+          <div
+            className="bg-gradient-to-br from-blue-900/90 to-cyan-900/90 backdrop-blur-md rounded-2xl p-8 max-w-2xl w-full border border-blue-500/50 max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="text-2xl font-bold mb-6 text-center">📅 Adicionar ao Calendário Editorial</h2>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const formData = new FormData(e.currentTarget);
+
+                const novoPost: PostCalendario = {
+                  id: `${Date.now()}-${selectedPostForCalendar.carousel.id}-${selectedPostForCalendar.slideIndex}`,
+                  carouselId: selectedPostForCalendar.carousel.id,
+                  carouselName: selectedPostForCalendar.carousel.name,
+                  slideIndex: selectedPostForCalendar.slideIndex,
+                  slideName: selectedPostForCalendar.carousel.slides[selectedPostForCalendar.slideIndex],
+                  imagePath: `/${selectedPostForCalendar.carousel.folder}/${selectedPostForCalendar.carousel.slides[selectedPostForCalendar.slideIndex]}`,
+                  tipo: formData.get('tipo') as PostCalendario['tipo'],
+                  titulo: formData.get('titulo') as string,
+                  canal: formData.get('canal') as PostCalendario['canal'],
+                  data: formData.get('data') as string,
+                  status: 'agendado',
+                  projeto: formData.get('projeto') as string,
+                  addedAt: new Date().toISOString(),
+                  rating: tempRating
+                };
+
+                setPostsCalendario(prev => [...prev, novoPost]);
+                setShowAddPostModal(false);
+                setSelectedPostForCalendar(null);
+                alert('✅ Post adicionado ao calendário editorial!');
+              }}
+              className="space-y-4"
+            >
+              {/* Preview da imagem */}
+              <div className="relative aspect-square w-full max-w-md mx-auto rounded-lg overflow-hidden mb-4">
+                <Image
+                  src={`/${selectedPostForCalendar.carousel.folder}/${selectedPostForCalendar.carousel.slides[selectedPostForCalendar.slideIndex]}`}
+                  alt="Preview"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 500px"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Tipo */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">Tipo de Post *</label>
+                  <select
+                    name="tipo"
+                    required
+                    className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:border-blue-500"
+                  >
+                    <option value="Reels">Reels</option>
+                    <option value="Feed">Feed</option>
+                    <option value="Carrossel" selected>Carrossel</option>
+                    <option value="Stories">Stories</option>
+                  </select>
+                </div>
+
+                {/* Canal */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">Canal *</label>
+                  <select
+                    name="canal"
+                    required
+                    className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:border-blue-500"
+                  >
+                    <option value="Instagram">Instagram</option>
+                    <option value="LinkedIn">LinkedIn</option>
+                    <option value="Site">Site</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Título */}
+              <div>
+                <label className="block text-sm font-medium mb-2">Título do Post *</label>
+                <input
+                  type="text"
+                  name="titulo"
+                  required
+                  placeholder="Ex: Como usar IA na sua empresa"
+                  defaultValue={selectedPostForCalendar.carousel.name}
+                  className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              {/* Projeto */}
+              <div>
+                <label className="block text-sm font-medium mb-2">Projeto *</label>
+                <select
+                  name="projeto"
+                  required
+                  className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:border-blue-500"
+                >
+                  <option value="Uzz.App">🤖 Uzz.App (Chatbot)</option>
+                  <option value="Uzz.Builder">🏗️ Uzz.Builder</option>
+                  <option value="Peladeiros">⚽ Peladeiros</option>
+                  <option value="Quem Somos">👥 Quem Somos</option>
+                  <option value="IA para Empresas">💡 IA para Empresas</option>
+                  <option value="Mundo da IA">🌐 Mundo da IA</option>
+                </select>
+              </div>
+
+              {/* Data */}
+              <div>
+                <label className="block text-sm font-medium mb-2">Data de Publicação *</label>
+                <input
+                  type="date"
+                  name="data"
+                  required
+                  min={new Date().toISOString().split('T')[0]}
+                  defaultValue={new Date().toISOString().split('T')[0]}
+                  className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              {/* Botões */}
+              <div className="flex gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowAddPostModal(false);
+                    setSelectedPostForCalendar(null);
+                  }}
+                  className="flex-1 px-6 py-3 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 px-6 py-3 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 transition-colors font-semibold"
+                >
+                  ✅ Adicionar ao Calendário
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Calendário Editorial Modal */}
+      {showCalendario && (
+        <div className="fixed inset-0 z-[70] bg-slate-900 overflow-y-auto">
+          <div className="min-h-screen p-4 md:p-8">
+            {/* Header do Calendário */}
+            <header className="max-w-7xl mx-auto mb-8 bg-slate-800 rounded-xl p-6 border border-slate-700">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div>
+                  <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                    📅 Calendário Editorial
+                  </h1>
+                  <p className="text-gray-400 mt-2">
+                    {new Date().getFullYear()} | Posts aprovados para publicação
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={exportCalendarioJSON}
+                    disabled={postsCalendario.length === 0}
+                    className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition-colors flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Exportar JSON
+                  </button>
+                  <button
+                    onClick={importCalendarioJSON}
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors flex items-center gap-2"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                    Importar JSON
+                  </button>
+                  <button
+                    onClick={clearCalendario}
+                    disabled={postsCalendario.length === 0}
+                    className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    🗑️ Limpar
+                  </button>
+                  <button
+                    onClick={() => setShowCalendario(false)}
+                    className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors"
+                  >
+                    ← Voltar
+                  </button>
+                </div>
+              </div>
+            </header>
+
+            {/* Estatísticas */}
+            <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+              <div className="bg-slate-800 rounded-xl p-4 border border-slate-700">
+                <div className="text-3xl font-bold text-white">{postsCalendario.length}</div>
+                <div className="text-sm text-gray-400">Total de Posts</div>
+              </div>
+              <div className="bg-slate-800 rounded-xl p-4 border border-slate-700">
+                <div className="text-3xl font-bold text-blue-400">
+                  {postsCalendario.filter(p => p.status === 'agendado').length}
+                </div>
+                <div className="text-sm text-gray-400">Agendados</div>
+              </div>
+              <div className="bg-slate-800 rounded-xl p-4 border border-slate-700">
+                <div className="text-3xl font-bold text-green-400">
+                  {postsCalendario.filter(p => p.status === 'publicado').length}
+                </div>
+                <div className="text-sm text-gray-400">Publicados</div>
+              </div>
+              <div className="bg-slate-800 rounded-xl p-4 border border-slate-700">
+                <div className="text-3xl font-bold text-gray-400">
+                  {postsCalendario.filter(p => p.status === 'arquivado').length}
+                </div>
+                <div className="text-sm text-gray-400">Arquivados</div>
+              </div>
+            </div>
+
+            {/* Gráficos de Distribuição */}
+            {postsCalendario.length > 0 && (
+              <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                {/* Distribuição por Canal */}
+                <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                  <h3 className="text-lg font-bold mb-4">📊 Por Canal</h3>
+                  <div className="space-y-3">
+                    {['LinkedIn', 'Instagram', 'Site'].map(canal => {
+                      const count = postsCalendario.filter(p => p.canal === canal).length;
+                      const percentage = postsCalendario.length > 0 ? (count / postsCalendario.length * 100).toFixed(1) : 0;
+                      return (
+                        <div key={canal}>
+                          <div className="flex justify-between text-sm mb-1">
+                            <span>{canal}</span>
+                            <span className="font-semibold">{count} ({percentage}%)</span>
+                          </div>
+                          <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+                            <div
+                              className={`h-full ${
+                                canal === 'LinkedIn' ? 'bg-blue-500' :
+                                canal === 'Instagram' ? 'bg-pink-500' :
+                                'bg-gray-500'
+                              }`}
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Distribuição por Tipo */}
+                <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                  <h3 className="text-lg font-bold mb-4">📊 Por Tipo</h3>
+                  <div className="space-y-3">
+                    {['Reels', 'Feed', 'Carrossel', 'Stories'].map(tipo => {
+                      const count = postsCalendario.filter(p => p.tipo === tipo).length;
+                      const percentage = postsCalendario.length > 0 ? (count / postsCalendario.length * 100).toFixed(1) : 0;
+                      return (
+                        <div key={tipo}>
+                          <div className="flex justify-between text-sm mb-1">
+                            <span>{tipo}</span>
+                            <span className="font-semibold">{count} ({percentage}%)</span>
+                          </div>
+                          <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+                            <div
+                              className={`h-full ${
+                                tipo === 'Reels' ? 'bg-blue-500' :
+                                tipo === 'Feed' ? 'bg-purple-500' :
+                                tipo === 'Carrossel' ? 'bg-green-500' :
+                                'bg-yellow-500'
+                              }`}
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Distribuição por Projeto */}
+                <div className="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                  <h3 className="text-lg font-bold mb-4">📊 Por Projeto</h3>
+                  <div className="space-y-3 max-h-[200px] overflow-y-auto">
+                    {Array.from(new Set(postsCalendario.map(p => p.projeto))).map(projeto => {
+                      const count = postsCalendario.filter(p => p.projeto === projeto).length;
+                      const percentage = postsCalendario.length > 0 ? (count / postsCalendario.length * 100).toFixed(1) : 0;
+                      return (
+                        <div key={projeto}>
+                          <div className="flex justify-between text-sm mb-1">
+                            <span className="truncate">{projeto}</span>
+                            <span className="font-semibold">{count} ({percentage}%)</span>
+                          </div>
+                          <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-gradient-to-r from-blue-500 to-cyan-500"
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Calendário */}
+            <div className="max-w-7xl mx-auto bg-slate-800 rounded-xl p-6 border border-slate-700">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold">
+                  {new Date(currentYear, currentMonth - 1).toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' })}
+                </h2>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      if (currentMonth === 1) {
+                        setCurrentMonth(12);
+                        setCurrentYear(currentYear - 1);
+                      } else {
+                        setCurrentMonth(currentMonth - 1);
+                      }
+                    }}
+                    className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
+                  >
+                    ← Anterior
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (currentMonth === 12) {
+                        setCurrentMonth(1);
+                        setCurrentYear(currentYear + 1);
+                      } else {
+                        setCurrentMonth(currentMonth + 1);
+                      }
+                    }}
+                    className="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg transition-colors"
+                  >
+                    Próximo →
+                  </button>
+                </div>
+              </div>
+
+              {/* Grid do Calendário */}
+              <div className="grid grid-cols-7 gap-2 mb-2">
+                {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(day => (
+                  <div key={day} className="text-center py-2 text-sm font-semibold text-gray-400">
+                    {day}
+                  </div>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-7 gap-2">
+                {(() => {
+                  const firstDay = new Date(currentYear, currentMonth - 1, 1).getDay();
+                  const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+                  const days = [];
+
+                  // Dias vazios antes do primeiro dia
+                  for (let i = 0; i < firstDay; i++) {
+                    days.push(
+                      <div key={`empty-${i}`} className="aspect-square bg-slate-900/50 rounded-lg" />
+                    );
+                  }
+
+                  // Dias do mês
+                  for (let day = 1; day <= daysInMonth; day++) {
+                    const dateString = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    const dayPosts = postsCalendario.filter(p => p.data === dateString);
+
+                    days.push(
+                      <div
+                        key={day}
+                        className="aspect-square bg-slate-700 rounded-lg p-2 overflow-hidden hover:bg-slate-600 transition-colors"
+                      >
+                        <div className="text-sm font-semibold text-gray-300 mb-1">{day}</div>
+                        <div className="space-y-1">
+                          {dayPosts.slice(0, 2).map((post, idx) => (
+                            <div
+                              key={idx}
+                              className={`text-xs px-1 py-0.5 rounded truncate ${
+                                post.tipo === 'Reels' ? 'bg-blue-500/20 text-blue-300' :
+                                post.tipo === 'Feed' ? 'bg-purple-500/20 text-purple-300' :
+                                post.tipo === 'Carrossel' ? 'bg-green-500/20 text-green-300' :
+                                'bg-yellow-500/20 text-yellow-300'
+                              }`}
+                              title={post.titulo}
+                            >
+                              {post.tipo}
+                            </div>
+                          ))}
+                          {dayPosts.length > 2 && (
+                            <div className="text-xs text-gray-400">+{dayPosts.length - 2}</div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  return days;
+                })()}
+              </div>
+            </div>
+
+            {/* Lista de Posts */}
+            <div className="max-w-7xl mx-auto mt-8">
+              <h3 className="text-2xl font-bold mb-4">Posts Cadastrados</h3>
+              {postsCalendario.length === 0 ? (
+                <div className="bg-slate-800 rounded-xl p-12 border border-slate-700 text-center">
+                  <p className="text-gray-400 text-lg mb-4">Nenhum post adicionado ao calendário ainda.</p>
+                  <p className="text-gray-500">Volte à galeria e clique em &quot;Adicionar ao Calendário&quot; nas imagens aprovadas.</p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {postsCalendario
+                    .sort((a, b) => new Date(a.data).getTime() - new Date(b.data).getTime())
+                    .map(post => (
+                      <div
+                        key={post.id}
+                        className="bg-slate-800 rounded-xl overflow-hidden border border-slate-700 hover:border-blue-500/50 transition-colors"
+                      >
+                        <div className="relative aspect-square">
+                          <Image
+                            src={post.imagePath}
+                            alt={post.titulo}
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          />
+                        </div>
+                        <div className="p-4">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                              post.tipo === 'Reels' ? 'bg-blue-500/20 text-blue-300' :
+                              post.tipo === 'Feed' ? 'bg-purple-500/20 text-purple-300' :
+                              post.tipo === 'Carrossel' ? 'bg-green-500/20 text-green-300' :
+                              'bg-yellow-500/20 text-yellow-300'
+                            }`}>
+                              {post.tipo}
+                            </span>
+                            <span className={`px-2 py-1 rounded text-xs font-semibold ${
+                              post.canal === 'LinkedIn' ? 'bg-blue-600 text-white' :
+                              post.canal === 'Instagram' ? 'bg-pink-600 text-white' :
+                              'bg-slate-600 text-white'
+                            }`}>
+                              {post.canal}
+                            </span>
+                          </div>
+                          <h4 className="font-semibold text-sm mb-2 line-clamp-2">{post.titulo}</h4>
+                          <p className="text-xs text-gray-400 mb-2">📅 {new Date(post.data).toLocaleDateString('pt-BR')}</p>
+                          <p className="text-xs text-gray-500">{post.carouselName}</p>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
