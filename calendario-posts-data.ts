@@ -110,6 +110,7 @@ export function createSlug(titulo: string): string {
     .replace(/[^a-z0-9\s-]/g, '')
     .trim()
     .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')  // Remove hífens consecutivos
     .substring(0, 50);
 }
 

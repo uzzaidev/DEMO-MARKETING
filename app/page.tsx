@@ -370,14 +370,13 @@ export default function CarouselGallery() {
     }
 
     const postsImportados: PostCalendario[] = calendarioPosts.map(post => {
-      const slug = createSlug(post.titulo);
       return {
         id: `oficial-${post.id}-${post.canal}`,
         carouselId: post.id,
         carouselName: `Post ${post.id}`,
         slideIndex: 0,
         slideName: `${post.tipo}-${post.canal}`,
-        imagePath: `/calendario-posts/post-${post.id}-${slug}/preview.jpg`,
+        imagePath: getPostImagePath(post, 0),
         tipo: post.tipo,
         titulo: post.titulo,
         canal: post.canal,
@@ -405,14 +404,13 @@ export default function CarouselGallery() {
     const postsTeste = calendarioPosts.slice(0, 7);
 
     const postsImportados: PostCalendario[] = postsTeste.map(post => {
-      const slug = createSlug(post.titulo);
       return {
         id: `teste-${post.id}-${post.canal}`,
         carouselId: post.id,
         carouselName: `Post ${post.id}`,
         slideIndex: 0,
         slideName: `${post.tipo}-${post.canal}`,
-        imagePath: `/calendario-posts/post-${post.id}-${slug}/preview.jpg`,
+        imagePath: getPostImagePath(post, 0),
         tipo: post.tipo,
         titulo: post.titulo,
         canal: post.canal,
