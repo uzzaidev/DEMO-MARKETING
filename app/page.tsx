@@ -1423,7 +1423,7 @@ export default function CarouselGallery() {
 
               {/* Grid do Calendário */}
               <div className="grid grid-cols-7 gap-2 mb-2">
-                {['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'].map(day => (
+                {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map(day => (
                   <div key={day} className="text-center py-2 text-sm font-semibold text-gray-400">
                     {day}
                   </div>
@@ -1432,21 +1432,20 @@ export default function CarouselGallery() {
 
               <div className="grid grid-cols-7 gap-2">
                 {(() => {
-                  // Ajustar para começar na segunda-feira (0 = domingo, precisamos transformar para 0 = segunda)
-                  const firstDayOfMonth = new Date(currentYear, currentMonth - 1, 1).getDay();
-                  const firstDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1; // Segunda = 0
+                  const startDay = 9; // Calendário começa no dia 9
                   const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+                  const firstDayOfMonth = new Date(currentYear, currentMonth - 1, startDay).getDay(); // Dia da semana do dia 9
                   const days = [];
 
-                  // Dias vazios antes do primeiro dia
-                  for (let i = 0; i < firstDay; i++) {
+                  // Dias vazios antes do dia 9
+                  for (let i = 0; i < firstDayOfMonth; i++) {
                     days.push(
                       <div key={`empty-${i}`} className="aspect-square bg-slate-900/50 rounded-lg" />
                     );
                   }
 
-                  // Dias do mês
-                  for (let day = 1; day <= daysInMonth; day++) {
+                  // Dias do mês a partir do dia 9
+                  for (let day = startDay; day <= daysInMonth; day++) {
                     const dateString = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                     const dayPosts = postsCalendarioFiltrados.filter(p => p.data === dateString);
                     const today = new Date().toISOString().split('T')[0];
