@@ -26,13 +26,13 @@ export const calendarioPosts: CalendarioPost[] = [
     status: 'agendado',
     projeto: 'Quem Somos',
     slides: [
-      'quem_somos_01_capa_1769676912001.png',
-      'quem_somos_02_problema_1769676308698.png',
-      'quem_somos_03_pilar_dev_1769676359802.png',
-      'quem_somos_04_pilar_design_1769676431827.png',
-      'quem_somos_05_pilar_marketing_1769676502954.png',
-      'quem_somos_06_diferencial_1769676637400.png',
-      'quem_somos_07_cta_1769676741055.png'
+      'quem_somos_01_capa.png',
+      'quem_somos_02_problema.png',
+      'quem_somos_03_pilar_dev.png',
+      'quem_somos_04_pilar_design.png',
+      'quem_somos_05_pilar_marketing.png',
+      'quem_somos_06_diferencial.png',
+      'quem_somos_07_cta.png'
     ]
   },
   { id: 36, tipo: 'Carrossel', titulo: 'Quem somos - Conheça a Uzz.Ai', canal: 'LinkedIn', data: '2026-02-09', status: 'agendado', projeto: 'Quem Somos' },

@@ -10,45 +10,45 @@
     {
       "index": 0,
       "nome": "Capa",
-      "arquivo": "quem_somos_01_capa_1769676912001.png",
+      "arquivo": "quem_somos_01_capa.png",
       "descricao": "Slide de capa do carrossel Quem Somos"
     },
     {
       "index": 1,
       "nome": "Problema",
-      "arquivo": "quem_somos_02_problema_1769676308698.png",
+      "arquivo": "quem_somos_02_problema.png",
       "descricao": "Apresentação do problema que a Uzz.Ai resolve"
     },
     {
       "index": 2,
       "nome": "Pilar Dev",
-      "arquivo": "quem_somos_03_pilar_dev_1769676359802.png",
+      "arquivo": "quem_somos_03_pilar_dev.png",
       "descricao": "Pilar de Desenvolvimento"
     },
     {
       "index": 3,
       "nome": "Pilar Design",
-      "arquivo": "quem_somos_04_pilar_design_1769676431827.png",
+      "arquivo": "quem_somos_04_pilar_design.png",
       "descricao": "Pilar de Design"
     },
     {
       "index": 4,
       "nome": "Pilar Marketing",
-      "arquivo": "quem_somos_05_pilar_marketing_1769676502954.png",
+      "arquivo": "quem_somos_05_pilar_marketing.png",
       "descricao": "Pilar de Marketing"
     },
     {
       "index": 5,
       "nome": "Diferencial",
-      "arquivo": "quem_somos_06_diferencial_1769676637400.png",
+      "arquivo": "quem_somos_06_diferencial.png",
       "descricao": "Diferenciais da Uzz.Ai"
     },
     {
       "index": 6,
       "nome": "CTA",
-      "arquivo": "quem_somos_07_cta_1769676741055.png",
+      "arquivo": "quem_somos_07_cta.png",
       "descricao": "Call to Action final"
     }
   ],
-  "observacoes": "Carrossel principal 'Quem Somos' para Instagram - Dia 09/02/2026"
+  "observacoes": "Carrossel principal 'Quem Somos' para Instagram - Dia 09/02/2026 - Imagens oficiais renomeadas"
 }
